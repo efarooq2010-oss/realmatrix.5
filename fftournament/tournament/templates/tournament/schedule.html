@@ -1,0 +1,123 @@
+{% extends 'tournament/base.html' %}
+{% load static %}
+
+{% block title %}Match Schedule - Free Fire Arena{% endblock %}
+
+{% block content %}
+<div class="row mb-5 align-items-center">
+    <div class="col-md-8">
+        <h1 class="text-neon-cyan font-heading display-4 fw-bold">COMBAT SCHEDULE</h1>
+        <p class="lead text-muted">Track upcoming battle room keys, weekly timings, maps, and live status.</p>
+    </div>
+    
+    <!-- Timezone Selector and Download Button -->
+    <div class="col-md-4 text-md-end timezone-selector-container">
+        <div class="d-flex gap-2 justify-content-md-end align-items-center">
+            <!-- Timezone selector -->
+            <select class="form-select bg-dark border-neon-cyan text-neon-cyan font-heading btn-sm" style="width: auto;" id="timezone-selector">
+                <option value="UTC" selected>UTC TIMEZONE</option>
+                <option value="IST">IST (+5:30)</option>
+                <option value="EST">EST (-5:00)</option>
+                <option value="BST">BST (+1:00)</option>
+            </select>
+            <!-- Download PDF -->
+            <button class="btn btn-cyber-orange" id="download-schedule" title="Save Schedule as PDF">
+                <i class="fa-solid fa-file-pdf me-2"></i>PDF DOWNLOAD
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Weekly Schedule Tabs (Monday to Sunday) -->
+<div class="row mb-5" id="printable-schedule-area">
+    <div class="col-12">
+        <ul class="nav nav-tabs border-neon-cyan mb-4" id="schedule-tabs" role="tablist">
+            {% for day in schedule_data.keys %}
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link font-heading {% if forloop.first %}active{% endif %}" 
+                            id="tab-{{ day }}" 
+                            data-bs-toggle="tab" 
+                            data-bs-target="#panel-{{ day }}" 
+                            type="button" 
+                            role="tab" 
+                            aria-controls="panel-{{ day }}" 
+                            aria-selected="{% if forloop.first %}true{% else %}false{% endif %}">
+                        {{ day|slice:":3"|upper }}
+                    </button>
+                </li>
+            {% endfor %}
+        </ul>
+
+        <div class="tab-content" id="schedule-tab-content">
+            {% for day, matches in schedule_data.items %}
+                <div class="tab-pane fade {% if forloop.first %}show active{% endif %}" 
+                     id="panel-{{ day }}" 
+                     role="tabpanel" 
+                     aria-labelledby="tab-{{ day }}">
+                    
+                    <div class="row row-cols-1 row-cols-md-2 g-4">
+                        {% for match in matches %}
+                            <div class="col" id="match-card-{{ match.id }}">
+                                <div class="card glass-card border-neon-cyan p-3">
+                                    <div class="card-body">
+                                        <!-- Header: Time and Live Indicator -->
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <span class="text-neon-cyan font-heading fw-bold">
+                                                <i class="fa-regular fa-clock me-2"></i>{{ match.match_time|date:"H:i" }} UTC
+                                            </span>
+                                            {% if match.status == 'Live' %}
+                                                <span class="badge bg-dark border border-success text-success d-flex align-items-center gap-2">
+                                                    <span class="live-dot"></span> LIVE NOW
+                                                </span>
+                                            {% else %}
+                                                <span class="badge bg-secondary">{{ match.status }}</span>
+                                            {% endif %}
+                                        </div>
+
+                                        <!-- Teams vs Section -->
+                                        <div class="row text-center my-3 py-2 bg-dark bg-opacity-50 rounded border border-secondary">
+                                            <div class="col-5">
+                                                <h5 class="text-white font-heading mb-1 text-truncate">{{ match.team1.team_name|default:"TBD Team" }}</h5>
+                                                <small class="text-muted">Capt: {{ match.team1.captain.full_name|default:"TBA" }}</small>
+                                            </div>
+                                            <div class="col-2 d-flex align-items-center justify-content-center">
+                                                <span class="text-neon-orange font-heading fw-bold fs-4">VS</span>
+                                            </div>
+                                            <div class="col-5">
+                                                <h5 class="text-white font-heading mb-1 text-truncate">{{ match.team2.team_name|default:"TBD Team" }}</h5>
+                                                <small class="text-muted">Capt: {{ match.team2.captain.full_name|default:"TBA" }}</small>
+                                            </div>
+                                        </div>
+
+                                        <!-- Metadata: Map, Lobby Info -->
+                                        <div class="row small mt-3 text-light">
+                                            <div class="col-6">
+                                                <strong class="text-neon-orange">Map Rotation:</strong> {{ match.map_name }}
+                                            </div>
+                                            <div class="col-6 text-end">
+                                                <strong class="text-neon-orange">Lobby ID/Code:</strong> 
+                                                {% if user.is_authenticated %}
+                                                    <span class="text-neon-cyan font-heading fw-bold" onclick="navigator.clipboard.writeText('ROOM-{{ match.id }}102'); showToast('Lobby code copied!', 'info');" style="cursor: pointer;">
+                                                        LOBBY-{{ match.id }}102 <i class="fa-solid fa-copy ms-1 small"></i>
+                                                    </span>
+                                                {% else %}
+                                                    <span class="text-muted small">Login to view</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% empty %}
+                            <div class="col-12 text-center py-5">
+                                <i class="fa-solid fa-calendar-xmark fa-3x text-muted mb-3"></i>
+                                <p class="text-muted mb-0">No tournament combat schedules configured for {{ day }}.</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

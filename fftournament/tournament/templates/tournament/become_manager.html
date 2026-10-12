@@ -1,0 +1,196 @@
+{% extends 'tournament/base.html' %}
+{% load static %}
+
+{% block title %}Become Tournament Manager - Free Fire Arena{% endblock %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <h1 class="text-neon-cyan font-heading display-4 fw-bold">BECOME TOURNAMENT MANAGER</h1>
+        <p class="lead text-muted">Upgrade your clearance level to host room lobbies, manage points boards, and claim organizer privileges.</p>
+        
+        <!-- User's Current Status -->
+        <div class="d-inline-block p-2 px-4 rounded border border-neon-orange bg-dark bg-opacity-75 mt-3">
+            <span class="small text-muted font-heading">Current Clearance Level:</span>
+            <strong class="text-neon-orange font-heading fs-5 ms-2">
+                {% if user.active_membership_tier %}
+                    {{ user.active_membership_tier|upper }}
+                {% else %}
+                    STANDARD
+                {% endif %}
+            </strong>
+        </div>
+    </div>
+</div>
+
+{% if messages %}
+<div class="row justify-content-center mb-4">
+    <div class="col-lg-8">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="row g-4 justify-content-center mb-5">
+    <!-- Silver Manager -->
+    <div class="col-md-4">
+        <div class="card glass-card h-100 {% if user.membership_tier == 'Silver' %}border-neon-orange{% else %}border-neon-cyan{% endif %} p-3 text-center">
+            <div class="card-body d-flex flex-column">
+                <div class="mb-3">
+                    <i class="fa-solid fa-award fa-4x text-light opacity-75"></i>
+                </div>
+                <h3 class="card-title text-white font-heading">SILVER MANAGER</h3>
+                <h4 class="text-neon-cyan font-heading my-3">💎 9.99 <span class="fs-6 text-muted">/ month (€9.99)</span></h4>
+                
+                <div class="w-100 border-bottom border-secondary my-3"></div>
+                
+                <ul class="list-unstyled text-start mb-4 text-light small flex-grow-1">
+                    <li class="mb-3"><i class="fa-solid fa-circle-check text-neon-cyan me-2"></i><strong>Lobby limit:</strong> 1 Tournament / Day</li>
+                    <li class="mb-3"><i class="fa-solid fa-circle-check text-neon-cyan me-2"></i><strong>Participant entry fee limit:</strong> Max 💎 2.00</li>
+                    <li class="mb-3"><i class="fa-solid fa-circle-check text-neon-cyan me-2"></i>Standard bracket configurations</li>
+                    <li class="mb-3"><i class="fa-solid fa-circle-check text-neon-cyan me-2"></i>Manual result submission</li>
+                    <li class="mb-3"><i class="fa-solid fa-circle-xmark text-muted me-2"></i>No VIP badges or highlights</li>
+                </ul>
+                
+                {% if user.active_membership_tier == 'Silver' %}
+                    <button class="btn btn-cyber-orange w-100" disabled>CURRENT PLAN</button>
+                {% else %}
+                    <button type="button" class="btn btn-cyber-cyan w-100 btn-choose-plan" data-tier="Silver" data-price="9.99" data-bs-toggle="modal" data-bs-target="#paymentModal">CHOOSE SILVER</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Gold Manager -->
+    <div class="col-md-4">
+        <div class="card glass-card h-100 {% if user.membership_tier == 'Gold' %}border-neon-orange{% else %}border-neon-cyan{% endif %} p-3 text-center" style="transform: scale(1.05); z-index: 2;">
+            <div class="card-body d-flex flex-column">
+                <div class="mb-3">
+                    <i class="fa-solid fa-medal fa-4x text-warning"></i>
+                </div>
+                <h3 class="card-title text-warning font-heading">GOLD MANAGER</h3>
+                <h4 class="text-neon-cyan font-heading my-3">💎 24.99 <span class="fs-6 text-muted">/ month (€24.99)</span></h4>
+                
+                <div class="w-100 border-bottom border-secondary my-3"></div>
+                
+                <ul class="list-unstyled text-start mb-4 text-light small flex-grow-1">
+                    <li class="mb-3"><i class="fa-solid fa-circle-check text-neon-cyan me-2"></i><strong>Lobby limit:</strong> 3 Tournaments / Day</li>
+                    <li class="mb-3"><i class="fa-solid fa-circle-check text-neon-cyan me-2"></i><strong>Participant entry fee limit:</strong> Max 💎 5.00</li>
+                    <li class="mb-3"><i class="fa-solid fa-circle-check text-neon-cyan me-2"></i>Custom rules and scoring parameters</li>
+                    <li class="mb-3"><i class="fa-solid fa-circle-check text-neon-cyan me-2"></i>Excel results sheet integration</li>
+                    <li class="mb-3"><i class="fa-solid fa-circle-check text-neon-cyan me-2"></i>Gold Host verification badge</li>
+                </ul>
+                
+                {% if user.active_membership_tier == 'Gold' %}
+                    <button class="btn btn-cyber-orange w-100" disabled>CURRENT PLAN</button>
+                {% else %}
+                    <button type="button" class="btn btn-cyber-cyan w-100 btn-choose-plan" data-tier="Gold" data-price="24.99" data-bs-toggle="modal" data-bs-target="#paymentModal">CHOOSE GOLD</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Diamond Manager -->
+    <div class="col-md-4">
+        <div class="card glass-card h-100 {% if user.membership_tier == 'Diamond' %}border-neon-orange{% else %}border-neon-cyan{% endif %} p-3 text-center">
+            <div class="card-body d-flex flex-column">
+                <div class="mb-3">
+                    <i class="fa-solid fa-gem fa-4x text-info"></i>
+                </div>
+                <h3 class="card-title text-info font-heading">DIAMOND MANAGER</h3>
+                <h4 class="text-neon-cyan font-heading my-3">💎 49.99 <span class="fs-6 text-muted">/ month (€49.99)</span></h4>
+                
+                <div class="w-100 border-bottom border-secondary my-3"></div>
+                
+                <ul class="list-unstyled text-start mb-4 text-light small flex-grow-1">
+                    <li class="mb-3"><i class="fa-solid fa-circle-check text-neon-cyan me-2"></i><strong>Lobby limit:</strong> 10 Tournaments / Day</li>
+                    <li class="mb-3"><i class="fa-solid fa-circle-check text-neon-cyan me-2"></i><strong>Participant entry fee limit:</strong> Max 💎 10.00</li>
+                    <li class="mb-3"><i class="fa-solid fa-circle-check text-neon-cyan me-2"></i>Full custom branding & ticket systems</li>
+                    <li class="mb-3"><i class="fa-solid fa-circle-check text-neon-cyan me-2"></i>Auto Garena API results sync</li>
+                    <li class="mb-3"><i class="fa-solid fa-circle-check text-neon-cyan me-2"></i>Diamond verified host tag</li>
+                </ul>
+                
+                {% if user.active_membership_tier == 'Diamond' %}
+                    <button class="btn btn-cyber-orange w-100" disabled>CURRENT PLAN</button>
+                {% else %}
+                    <button type="button" class="btn btn-cyber-cyan w-100 btn-choose-plan" data-tier="Diamond" data-price="49.99" data-bs-toggle="modal" data-bs-target="#paymentModal">CHOOSE DIAMOND</button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_modals %}
+<div class="modal fade" id="paymentModal" tabindex="-1" aria-labelledby="paymentModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-dark text-white" style="border: 2px solid var(--neon-cyan); box-shadow: 0 0 30px rgba(0,255,255,0.2);">
+            <div class="modal-header border-secondary" style="background: linear-gradient(135deg, rgba(0,255,255,0.08), rgba(255,94,0,0.08));">
+                <h4 class="modal-title font-heading text-neon-cyan" id="paymentModalLabel">
+                    <i class="fa-solid fa-gem text-info me-2"></i>PAY WITH DIAMONDS
+                </h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{% url 'become_manager' %}" id="payment-form">
+                {% csrf_token %}
+                <input type="hidden" name="tier" id="payment-tier" value="">
+                <div class="modal-body px-4 py-4 text-center">
+
+                    <!-- Order Summary -->
+                    <div class="p-3 rounded mb-4" style="background: rgba(0,255,255,0.05); border: 1px dashed rgba(0,255,255,0.3);">
+                        <span class="font-heading text-neon-cyan fs-5 d-block mb-1">
+                            <i class="fa-solid fa-crown me-2"></i><span id="payment-tier-display">SILVER</span> MANAGER UNLOCK
+                        </span>
+                        <p class="mb-2 text-muted small">1 Month Manager Host Clearance</p>
+                        <h2 class="text-neon-orange font-heading fw-bold mb-0" id="payment-price-display">💎 9.99</h2>
+                    </div>
+
+                    <!-- User Wallet Balance Check -->
+                    <div class="p-3 rounded bg-dark border border-secondary mb-3">
+                        <span class="text-muted font-heading small d-block mb-1">YOUR CURRENT WALLET BALANCE</span>
+                        <h3 class="text-neon-cyan font-heading mb-0">💎 {{ user.diamonds|default:"0.00" }}</h3>
+                    </div>
+
+                    <div class="alert alert-dark border-neon-cyan small text-light text-start mb-0">
+                        <i class="fa-solid fa-circle-info text-neon-cyan me-2"></i>
+                        The subscription price will be deducted directly from your Diamond Balance. You can top up your wallet with real money (1€ = 1💎) anytime from the <strong>Wallet</strong> section.
+                    </div>
+
+                </div>
+                <div class="modal-footer border-secondary d-flex justify-content-center">
+                    <button type="button" class="btn btn-outline-secondary font-heading px-4" data-bs-dismiss="modal">
+                        CANCEL
+                    </button>
+                    <button type="submit" class="btn btn-cyber-orange btn-lg font-heading px-5" id="btn-pay-now">
+                        <i class="fa-solid fa-gem me-2"></i>CONFIRM PAYMENT (<span id="btn-pay-amount">💎 9.99</span>)
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const chooseBtns = document.querySelectorAll('.btn-choose-plan');
+    chooseBtns.forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            const tier = this.dataset.tier;
+            const price = this.dataset.price;
+            document.getElementById('payment-tier').value = tier;
+            document.getElementById('payment-tier-display').textContent = tier.toUpperCase();
+            document.getElementById('payment-price-display').textContent = '💎 ' + price;
+            document.getElementById('btn-pay-amount').textContent = '💎 ' + price;
+        });
+    });
+});
+</script>
+{% endblock %}

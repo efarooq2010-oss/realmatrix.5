@@ -1,0 +1,128 @@
+{% extends 'tournament/base.html' %}
+{% load static %}
+
+{% block title %}Login – Free Fire Arena{% endblock %}
+
+{% block extra_head %}
+<style>
+.login-wrapper {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.login-card {
+    background: rgba(8,14,30,0.92);
+    border: 1px solid rgba(255,107,0,0.35);
+    border-radius: 16px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 430px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 40px rgba(255,107,0,0.08);
+    backdrop-filter: blur(16px);
+    position: relative;
+    overflow: hidden;
+}
+.login-card::before {
+    content:'';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--fire-red), var(--fire-orange), var(--neon-cyan));
+    box-shadow: 0 0 12px var(--fire-orange);
+}
+.login-logo {
+    font-size: 3rem;
+    display: block;
+    text-align: center;
+    margin-bottom: 4px;
+    filter: drop-shadow(0 0 12px var(--fire-orange));
+}
+.login-title {
+    font-family: var(--font-heading);
+    font-size: 1.3rem;
+    font-weight: 900;
+    letter-spacing: 3px;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 4px;
+}
+.login-sub {
+    font-family: var(--font-sub);
+    font-size: 0.8rem;
+    letter-spacing: 1.5px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-bottom: 28px;
+    text-transform: uppercase;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="login-wrapper">
+    <div class="login-card">
+        <!-- Cool Fire Emblem Hero Logo -->
+        <div class="cool-fire-hero-logo">
+            <div class="cool-fire-hero-emblem">
+                <div class="flame-glow-ring"></div>
+                <svg class="flame-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 2C11.5 5 9.5 7.2 9 9C8.5 7.8 8.6 6.4 8.2 5.2C6.2 8 4 11.5 4 15.2C4 19.5 7.6 23 12 23C16.4 23 20 19.5 20 15.2C20 11.8 17.8 7.5 14.5 4.5C14.2 6.5 13.2 8 12.2 9C12.5 6.5 12.3 4.2 12 2Z" fill="url(#navFireGradOuter)" />
+                    <path d="M12 11C11 13 9 14.5 9 17C9 18.7 10.3 20 12 20C13.7 20 15 18.7 15 17C15 15 13.5 13 12 11Z" fill="url(#navFireGradInner)" />
+                </svg>
+            </div>
+        </div>
+        <div class="login-title">FF ARENA</div>
+        <div class="login-sub">Sign in to enter the battleground</div>
+
+        <form method="POST" action="{% url 'login' %}" id="login-form">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="login-username" class="form-label">
+                    <i class="fa-solid fa-user me-1 text-neon-orange"></i> Username or Email
+                </label>
+                <input type="text" name="username" class="form-control" id="login-username"
+                       placeholder="your@email.com or username" required autocomplete="username">
+            </div>
+
+            <div class="mb-3">
+                <label for="login-password" class="form-label">
+                    <i class="fa-solid fa-lock me-1 text-neon-orange"></i> Password
+                </label>
+                <input type="password" name="password" class="form-control" id="login-password"
+                       placeholder="••••••••" required autocomplete="current-password">
+            </div>
+
+            <div class="mb-4 d-flex justify-content-between align-items-center">
+                <div class="form-check">
+                    <input type="checkbox" name="remember_me" class="form-check-input" id="remember-me">
+                    <label class="form-check-label text-muted" for="remember-me" style="font-family:var(--font-sub);font-size:0.85rem;">
+                        Remember Me
+                    </label>
+                </div>
+                <a href="#" class="text-neon-orange small text-decoration-none"
+                   style="font-family:var(--font-sub);"
+                   onclick="alert('Contact admin to reset password.'); return false;">
+                    Forgot Password?
+                </a>
+            </div>
+
+            <div class="d-grid mb-4">
+                <button type="submit" class="btn btn-cyber-orange" id="btn-submit-login">
+                    <i class="fa-solid fa-fire me-2"></i>ENTER THE ARENA
+                </button>
+            </div>
+
+            <hr class="hr-neon">
+
+            <p class="text-center mb-0" style="font-family:var(--font-sub);font-size:0.9rem;color:var(--text-muted);">
+                Don't have an account?
+                <a href="{% url 'register_user' %}" class="text-neon-cyan text-decoration-none fw-bold">
+                    Register Now
+                </a>
+            </p>
+        </form>
+    </div>
+</div>
+{% endblock %}

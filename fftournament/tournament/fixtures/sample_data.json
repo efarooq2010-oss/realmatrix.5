@@ -1,0 +1,513 @@
+[
+  {
+    "model": "tournament.userprofile",
+    "pk": 1,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$mockpbkdf2$hashval12345=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "ahmad@gmail.com",
+      "first_name": "Ahmad",
+      "last_name": "Khan",
+      "email": "ahmad@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-22T17:00:00Z",
+      "full_name": "Ahmad Khan",
+      "game_id": "9876543210",
+      "gmail": "ahmad@gmail.com",
+      "phone_number": "+919876543210",
+      "created_at": "2026-05-22T17:00:00Z"
+    }
+  },
+  {
+    "model": "tournament.userprofile",
+    "pk": 2,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$mockpbkdf2$hashval12345=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "faisal@gmail.com",
+      "first_name": "Faisal",
+      "last_name": "Rahman",
+      "email": "faisal@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-22T17:00:00Z",
+      "full_name": "Faisal Rahman",
+      "game_id": "8765432109",
+      "gmail": "faisal@gmail.com",
+      "phone_number": "+918765432109",
+      "created_at": "2026-05-22T17:00:00Z"
+    }
+  },
+  {
+    "model": "tournament.userprofile",
+    "pk": 3,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$mockpbkdf2$hashval12345=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "kamal@gmail.com",
+      "first_name": "Kamal",
+      "last_name": "Uddin",
+      "email": "kamal@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-22T17:00:00Z",
+      "full_name": "Kamal Uddin",
+      "game_id": "7654321098",
+      "gmail": "kamal@gmail.com",
+      "phone_number": "+917654321098",
+      "created_at": "2026-05-22T17:00:00Z"
+    }
+  },
+  {
+    "model": "tournament.userprofile",
+    "pk": 4,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$mockpbkdf2$hashval12345=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "zain@gmail.com",
+      "first_name": "Zain",
+      "last_name": "Malik",
+      "email": "zain@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-22T17:00:00Z",
+      "full_name": "Zain Malik",
+      "game_id": "6543210987",
+      "gmail": "zain@gmail.com",
+      "phone_number": "+916543210987",
+      "created_at": "2026-05-22T17:00:00Z"
+    }
+  },
+  {
+    "model": "tournament.userprofile",
+    "pk": 5,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$mockpbkdf2$hashval12345=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "tariq@gmail.com",
+      "first_name": "Tariq",
+      "last_name": "Jamil",
+      "email": "tariq@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-22T17:00:00Z",
+      "full_name": "Tariq Jamil",
+      "game_id": "5432109876",
+      "gmail": "tariq@gmail.com",
+      "phone_number": "+915432109876",
+      "created_at": "2026-05-22T17:00:00Z"
+    }
+  },
+  {
+    "model": "tournament.userprofile",
+    "pk": 6,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$mockpbkdf2$hashval12345=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "hassan@gmail.com",
+      "first_name": "Hassan",
+      "last_name": "Ali",
+      "email": "hassan@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-22T17:00:00Z",
+      "full_name": "Hassan Ali",
+      "game_id": "4321098765",
+      "gmail": "hassan@gmail.com",
+      "phone_number": "+914321098765",
+      "created_at": "2026-05-22T17:00:00Z"
+    }
+  },
+  {
+    "model": "tournament.userprofile",
+    "pk": 7,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$mockpbkdf2$hashval12345=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "bilal@gmail.com",
+      "first_name": "Bilal",
+      "last_name": "Siddique",
+      "email": "bilal@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-22T17:00:00Z",
+      "full_name": "Bilal Siddique",
+      "game_id": "3210987654",
+      "gmail": "bilal@gmail.com",
+      "phone_number": "+913210987654",
+      "created_at": "2026-05-22T17:00:00Z"
+    }
+  },
+  {
+    "model": "tournament.userprofile",
+    "pk": 8,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$mockpbkdf2$hashval12345=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "hamza@gmail.com",
+      "first_name": "Hamza",
+      "last_name": "Abbasi",
+      "email": "hamza@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-22T17:00:00Z",
+      "full_name": "Hamza Abbasi",
+      "game_id": "2109876543",
+      "gmail": "hamza@gmail.com",
+      "phone_number": "+912109876543",
+      "created_at": "2026-05-22T17:00:00Z"
+    }
+  },
+  {
+    "model": "tournament.userprofile",
+    "pk": 9,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$mockpbkdf2$hashval12345=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "omar@gmail.com",
+      "first_name": "Omar",
+      "last_name": "Farooq",
+      "email": "omar@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-22T17:00:00Z",
+      "full_name": "Omar Farooq",
+      "game_id": "1098765432",
+      "gmail": "omar@gmail.com",
+      "phone_number": "+911098765432",
+      "created_at": "2026-05-22T17:00:00Z"
+    }
+  },
+  {
+    "model": "tournament.userprofile",
+    "pk": 10,
+    "fields": {
+      "password": "pbkdf2_sha256$600000$mockpbkdf2$hashval12345=",
+      "last_login": null,
+      "is_superuser": false,
+      "username": "yousef@gmail.com",
+      "first_name": "Yousef",
+      "last_name": "Hussain",
+      "email": "yousef@gmail.com",
+      "is_staff": false,
+      "is_active": true,
+      "date_joined": "2026-05-22T17:00:00Z",
+      "full_name": "Yousef Hussain",
+      "game_id": "0987654321",
+      "gmail": "yousef@gmail.com",
+      "phone_number": "+910987654321",
+      "created_at": "2026-05-22T17:00:00Z"
+    }
+  },
+  {
+    "model": "tournament.tournament",
+    "pk": 1,
+    "fields": {
+      "name": "Solo Showdown Premium",
+      "mode": "Solo",
+      "date": "2026-05-25T15:00:00Z",
+      "entry_fee": "5.00",
+      "prize_pool": "200.00",
+      "slots_total": 48,
+      "slots_available": 45,
+      "status": "Upcoming"
+    }
+  },
+  {
+    "model": "tournament.tournament",
+    "pk": 2,
+    "fields": {
+      "name": "Duo Clash Champions",
+      "mode": "Duo",
+      "date": "2026-05-28T14:00:00Z",
+      "entry_fee": "10.00",
+      "prize_pool": "300.00",
+      "slots_total": 24,
+      "slots_available": 22,
+      "status": "Upcoming"
+    }
+  },
+  {
+    "model": "tournament.tournament",
+    "pk": 3,
+    "fields": {
+      "name": "Squad Battle Royal League",
+      "mode": "Squad",
+      "date": "2026-05-29T19:00:00Z",
+      "entry_fee": "20.00",
+      "prize_pool": "500.00",
+      "slots_total": 12,
+      "slots_available": 2,
+      "status": "Ongoing"
+    }
+  },
+  {
+    "model": "tournament.team",
+    "pk": 1,
+    "fields": {
+      "tournament": 3,
+      "team_name": "Viper Gaming",
+      "captain": 1,
+      "players": [
+        {"name": "Ahmad Khan", "free_fire_id": "9876543210"},
+        {"name": "P2", "free_fire_id": "1111"},
+        {"name": "P3", "free_fire_id": "2222"},
+        {"name": "P4", "free_fire_id": "3333"}
+      ],
+      "payment_status": "Paid"
+    }
+  },
+  {
+    "model": "tournament.team",
+    "pk": 2,
+    "fields": {
+      "tournament": 3,
+      "team_name": "Alpha Hunters",
+      "captain": 2,
+      "players": [
+        {"name": "Faisal Rahman", "free_fire_id": "8765432109"},
+        {"name": "Q2", "free_fire_id": "4444"},
+        {"name": "Q3", "free_fire_id": "5555"},
+        {"name": "Q4", "free_fire_id": "6666"}
+      ],
+      "payment_status": "Paid"
+    }
+  },
+  {
+    "model": "tournament.team",
+    "pk": 3,
+    "fields": {
+      "tournament": 3,
+      "team_name": "Inferno Lords",
+      "captain": 3,
+      "players": [
+        {"name": "Kamal Uddin", "free_fire_id": "7654321098"},
+        {"name": "R2", "free_fire_id": "7777"},
+        {"name": "R3", "free_fire_id": "8888"},
+        {"name": "R4", "free_fire_id": "9999"}
+      ],
+      "payment_status": "Paid"
+    }
+  },
+  {
+    "model": "tournament.team",
+    "pk": 4,
+    "fields": {
+      "tournament": 3,
+      "team_name": "Cyber Ghosts",
+      "captain": 4,
+      "players": [
+        {"name": "Zain Malik", "free_fire_id": "6543210987"}
+      ],
+      "payment_status": "Paid"
+    }
+  },
+  {
+    "model": "tournament.team",
+    "pk": 5,
+    "fields": {
+      "tournament": 3,
+      "team_name": "Delta Knights",
+      "captain": 5,
+      "players": [
+        {"name": "Tariq Jamil", "free_fire_id": "5432109876"}
+      ],
+      "payment_status": "Paid"
+    }
+  },
+  {
+    "model": "tournament.team",
+    "pk": 6,
+    "fields": {
+      "tournament": 3,
+      "team_name": "Matrix Gliders",
+      "captain": 6,
+      "players": [
+        {"name": "Hassan Ali", "free_fire_id": "4321098765"}
+      ],
+      "payment_status": "Paid"
+    }
+  },
+  {
+    "model": "tournament.team",
+    "pk": 7,
+    "fields": {
+      "tournament": 3,
+      "team_name": "Phantom Predators",
+      "captain": 7,
+      "players": [
+        {"name": "Bilal Siddique", "free_fire_id": "3210987654"}
+      ],
+      "payment_status": "Pending"
+    }
+  },
+  {
+    "model": "tournament.team",
+    "pk": 8,
+    "fields": {
+      "tournament": 3,
+      "team_name": "Zero Absolute",
+      "captain": 8,
+      "players": [
+        {"name": "Hamza Abbasi", "free_fire_id": "2109876543"}
+      ],
+      "payment_status": "Paid"
+    }
+  },
+  {
+    "model": "tournament.team",
+    "pk": 9,
+    "fields": {
+      "tournament": 3,
+      "team_name": "Tactical Strike",
+      "captain": 9,
+      "players": [
+        {"name": "Omar Farooq", "free_fire_id": "1098765432"}
+      ],
+      "payment_status": "Paid"
+    }
+  },
+  {
+    "model": "tournament.team",
+    "pk": 10,
+    "fields": {
+      "tournament": 3,
+      "team_name": "Phoenix Reborn",
+      "captain": 10,
+      "players": [
+        {"name": "Yousef Hussain", "free_fire_id": "0987654321"}
+      ],
+      "payment_status": "Paid"
+    }
+  },
+  {
+    "model": "tournament.match",
+    "pk": 1,
+    "fields": {
+      "tournament": 3,
+      "team1": 1,
+      "team2": 2,
+      "match_time": "2026-05-25T15:00:00Z",
+      "winner": 1,
+      "status": "Completed",
+      "map_name": "Bermuda"
+    }
+  },
+  {
+    "model": "tournament.match",
+    "pk": 2,
+    "fields": {
+      "tournament": 3,
+      "team1": 3,
+      "team2": 4,
+      "match_time": "2026-05-26T18:00:00Z",
+      "winner": 3,
+      "status": "Completed",
+      "map_name": "Purgatory"
+    }
+  },
+  {
+    "model": "tournament.match",
+    "pk": 3,
+    "fields": {
+      "tournament": 3,
+      "team1": 5,
+      "team2": 6,
+      "match_time": "2026-05-27T20:00:00Z",
+      "winner": 5,
+      "status": "Completed",
+      "map_name": "Kalahari"
+    }
+  },
+  {
+    "model": "tournament.match",
+    "pk": 4,
+    "fields": {
+      "tournament": 3,
+      "team1": 1,
+      "team2": 3,
+      "match_time": "2026-05-29T19:00:00Z",
+      "winner": null,
+      "status": "Live",
+      "map_name": "Bermuda"
+    }
+  },
+  {
+    "model": "tournament.match",
+    "pk": 5,
+    "fields": {
+      "tournament": 2,
+      "team1": null,
+      "team2": null,
+      "match_time": "2026-05-28T14:00:00Z",
+      "winner": null,
+      "status": "Upcoming",
+      "map_name": "Bermuda"
+    }
+  },
+  {
+    "model": "tournament.score",
+    "pk": 1,
+    "fields": {
+      "match": 1,
+      "team": 1,
+      "kills": 10,
+      "placement": 1,
+      "points": 22
+    }
+  },
+  {
+    "model": "tournament.score",
+    "pk": 2,
+    "fields": {
+      "match": 1,
+      "team": 2,
+      "kills": 4,
+      "placement": 2,
+      "points": 13
+    }
+  },
+  {
+    "model": "tournament.score",
+    "pk": 3,
+    "fields": {
+      "match": 2,
+      "team": 3,
+      "kills": 12,
+      "placement": 1,
+      "points": 24
+    }
+  },
+  {
+    "model": "tournament.score",
+    "pk": 4,
+    "fields": {
+      "match": 2,
+      "team": 4,
+      "kills": 3,
+      "placement": 2,
+      "points": 12
+    }
+  },
+  {
+    "model": "tournament.score",
+    "pk": 5,
+    "fields": {
+      "match": 3,
+      "team": 5,
+      "kills": 8,
+      "placement": 1,
+      "points": 20
+    }
+  }
+]

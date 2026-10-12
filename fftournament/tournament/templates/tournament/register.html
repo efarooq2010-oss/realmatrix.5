@@ -1,0 +1,181 @@
+{% extends 'tournament/base.html' %}
+{% load static %}
+
+{% block title %}Register - Free Fire Tournament{% endblock %}
+
+{% block content %}
+<div class="container mt-5 pt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card bg-dark text-white border border-info">
+                <div class="card-header bg-info bg-opacity-25 border-bottom border-info">
+                    <h3 class="text-center mb-0">
+                        <i class="fas fa-user-plus me-2 text-info"></i>
+                        Free Fire Registration
+                    </h3>
+                </div>
+                <div class="card-body p-4">
+                    
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    <form method="POST" action="{% url 'register_user' %}">
+                        {% csrf_token %}
+                        
+                        <!-- Full Name -->
+                        <div class="mb-3">
+                            <label for="full_name" class="form-label text-light">
+                                <i class="fas fa-user me-1 text-info"></i> Full Name
+                            </label>
+                            <input type="text" 
+                                   class="form-control bg-dark text-white border-secondary" 
+                                   id="full_name" 
+                                   name="full_name" 
+                                   placeholder="Enter your full name"
+                                   value="{{ form.full_name.value|default:'' }}"
+                                   required>
+                            {% if form.full_name.errors %}
+                                <div class="text-danger small mt-1">{{ form.full_name.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Game ID -->
+                        <div class="mb-3">
+                            <label for="game_id" class="form-label text-light">
+                                <i class="fas fa-gamepad me-1 text-info"></i> Game ID
+                            </label>
+                            <input type="text" 
+                                   class="form-control bg-dark text-white border-secondary" 
+                                   id="game_id" 
+                                   name="game_id" 
+                                   placeholder="Enter your Free Fire ID (e.g., 1234567890)"
+                                   value="{{ form.game_id.value|default:'' }}"
+                                   required>
+                            <div class="form-text text-muted small">Your unique Free Fire game ID</div>
+                            {% if form.game_id.errors %}
+                                <div class="text-danger small mt-1">{{ form.game_id.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Gmail -->
+                        <div class="mb-3">
+                            <label for="gmail" class="form-label text-light">
+                                <i class="fas fa-envelope me-1 text-info"></i> Gmail Address
+                            </label>
+                            <input type="email" 
+                                   class="form-control bg-dark text-white border-secondary" 
+                                   id="gmail" 
+                                   name="gmail" 
+                                   placeholder="Enter your Gmail (example@gmail.com)"
+                                   value="{{ form.gmail.value|default:'' }}"
+                                   required>
+                            {% if form.gmail.errors %}
+                                <div class="text-danger small mt-1">{{ form.gmail.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Password -->
+                        <div class="mb-3">
+                            <label for="password" class="form-label text-light">
+                                <i class="fas fa-lock me-1 text-info"></i> Password
+                            </label>
+                            <input type="password" 
+                                   class="form-control bg-dark text-white border-secondary" 
+                                   id="password" 
+                                   name="password" 
+                                   placeholder="Create a password (min 6 characters)"
+                                   required>
+                            <div class="form-text text-muted small">Min 6 characters</div>
+                            {% if form.password.errors %}
+                                <div class="text-danger small mt-1">{{ form.password.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Confirm Password -->
+                        <div class="mb-3">
+                            <label for="confirm_password" class="form-label text-light">
+                                <i class="fas fa-check-circle me-1 text-info"></i> Confirm Password
+                            </label>
+                            <input type="password" 
+                                   class="form-control bg-dark text-white border-secondary" 
+                                   id="confirm_password" 
+                                   name="confirm_password" 
+                                   placeholder="Re-enter your password"
+                                   required>
+                            <div id="password-match-message" class="small mt-1"></div>
+                            {% if form.confirm_password.errors %}
+                                <div class="text-danger small mt-1">{{ form.confirm_password.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div class="mb-4">
+                            <label for="phone_number" class="form-label text-light">
+                                <i class="fas fa-phone me-1 text-info"></i> Phone Number
+                            </label>
+                            <input type="tel" 
+                                   class="form-control bg-dark text-white border-secondary" 
+                                   id="phone_number" 
+                                   name="phone_number" 
+                                   placeholder="Enter your phone number (e.g., +919876543210)"
+                                   value="{{ form.phone_number.value|default:'' }}"
+                                   required>
+                            {% if form.phone_number.errors %}
+                                <div class="text-danger small mt-1">{{ form.phone_number.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-info btn-lg">
+                                <i class="fas fa-user-plus me-2"></i> REGISTER NOW
+                            </button>
+                        </div>
+
+                        <p class="text-center text-muted mt-3 mb-0">
+                            Already have an account? 
+                            <a href="{% url 'login' %}" class="text-info text-decoration-none">
+                                <i class="fas fa-sign-in-alt me-1"></i>Login here
+                            </a>
+                        </p>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Simple JavaScript for password confirmation -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const password = document.getElementById('password');
+    const confirmPassword = document.getElementById('confirm_password');
+    const matchMessage = document.getElementById('password-match-message');
+
+    function checkPasswordMatch() {
+        if (password.value === '' && confirmPassword.value === '') {
+            matchMessage.textContent = '';
+            matchMessage.className = 'small mt-1';
+            return;
+        }
+        
+        if (password.value === confirmPassword.value) {
+            matchMessage.textContent = '✓ Passwords match!';
+            matchMessage.className = 'text-success small mt-1';
+        } else {
+            matchMessage.textContent = '✗ Passwords do not match';
+            matchMessage.className = 'text-danger small mt-1';
+        }
+    }
+
+    password.addEventListener('keyup', checkPasswordMatch);
+    confirmPassword.addEventListener('keyup', checkPasswordMatch);
+});
+</script>
+{% endblock %}

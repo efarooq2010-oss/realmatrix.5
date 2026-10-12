@@ -1,0 +1,369 @@
+{% extends 'tournament/base.html' %}
+{% load static %}
+
+{% block title %}Tournaments – Free Fire Arena{% endblock %}
+
+{% block extra_head %}
+<style>
+/* Tournament card image thumbnails per mode */
+.t-thumb {
+    height: 120px;
+    overflow: hidden;
+    position: relative;
+    background: var(--bg-mid);
+}
+.t-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    opacity: 0.55;
+    transition: opacity 0.4s ease, transform 0.4s ease;
+}
+.glass-card:hover .t-thumb img {
+    opacity: 0.75;
+    transform: scale(1.06);
+}
+.t-thumb .mode-label {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    padding: 6px 12px;
+    background: linear-gradient(0deg, rgba(5,8,16,0.95), transparent);
+    font-family: var(--font-sub);
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--neon-cyan);
+}
+.t-thumb .status-dot {
+    position: absolute; top: 10px; right: 10px;
+    padding: 3px 10px;
+    border-radius: 4px;
+    font-family: var(--font-sub);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+/* Slot progress bar */
+.slot-bar {
+    height: 5px;
+    background: rgba(255,255,255,0.08);
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 4px;
+}
+.slot-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon-cyan), var(--fire-orange));
+    border-radius: 3px;
+    transition: width 0.6s ease;
+}
+
+/* Filter button group */
+.filter-group .btn { border-radius: 0; border: 1px solid rgba(255,107,0,0.3); }
+.filter-group .btn:first-child { border-radius: 6px 0 0 6px; }
+.filter-group .btn:last-child  { border-radius: 0 6px 6px 0; }
+.filter-group .btn.active-filter {
+    background: linear-gradient(135deg, var(--fire-red), var(--fire-orange)) !important;
+    color: #fff !important;
+    border-color: var(--fire-orange) !important;
+    box-shadow: 0 0 14px rgba(255,107,0,0.3);
+}
+
+.t-page-banner {
+    position: relative;
+    border-radius: 14px;
+    overflow: hidden;
+    height: 190px;
+    border: 1px solid rgba(255, 107, 0, 0.3);
+    margin-bottom: 30px;
+    box-shadow: 0 0 25px rgba(255, 107, 0, 0.15);
+}
+.t-page-banner img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+    filter: brightness(0.65) contrast(1.1);
+}
+.t-page-banner .banner-content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(90deg, rgba(5,8,16,0.85) 0%, rgba(5,8,16,0.4) 50%, rgba(5,8,16,0.85) 100%);
+    padding: 20px;
+    text-align: center;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ── Promotional Tournament Banner ──────────────────────────────── -->
+<div class="t-page-banner">
+    <img src="{% url 'ff_banner' %}" alt="Free Fire Tournament Arena">
+    <div class="banner-content">
+        <div class="hero-fire-badge mb-2 d-inline-flex align-items-center gap-2">
+            <svg class="flame-svg" style="width: 14px; height: 14px;" viewBox="0 0 24 24" fill="none">
+                <path d="M12 2C11.5 5 9.5 7.2 9 9C8.5 7.8 8.6 6.4 8.2 5.2C6.2 8 4 11.5 4 15.2C4 19.5 7.6 23 12 23C16.4 23 20 19.5 20 15.2C20 11.8 17.8 7.5 14.5 4.5C14.2 6.5 13.2 8 12.2 9C12.5 6.5 12.3 4.2 12 2Z" fill="#ffffff" />
+                <path d="M12 11C11 13 9 14.5 9 17C9 18.7 10.3 20 12 20C13.7 20 15 18.7 15 17C15 15 13.5 13 12 11Z" fill="#ffea00" />
+            </svg>
+            <span>OFFICIALLY SANCTIONED TOURNAMENTS</span>
+        </div>
+        <h2 class="text-white font-heading fw-bold mb-1" style="letter-spacing: 2px; text-shadow: 0 0 15px rgba(0,229,255,0.7);">
+            CLAIM THE BOOYAH!
+        </h2>
+        <p class="text-neon-cyan font-sub mb-0" style="font-size: 1rem; letter-spacing: 1px;">
+            Choose your format: Solo, Duo, or Squad and compete for Diamonds.
+        </p>
+    </div>
+</div>
+
+<!-- ── Page Header ──────────────────────────────────────────────────── -->
+<div class="text-center mb-5">
+    <div class="hero-fire-badge mb-3">⚔️ ACTIVE EVENTS</div>
+    <h1 class="text-white mb-2" style="font-size:clamp(1.8rem,5vw,3.5rem);font-weight:900;letter-spacing:3px;">
+        WARZONE <span class="text-neon-cyan">SLOTS</span>
+    </h1>
+    <p class="text-muted mb-4" style="font-family:var(--font-sub);font-size:1rem;max-width:500px;margin:0 auto;">
+        Join active events, register your squad, and battle for the Diamond prize pool.
+    </p>
+
+    <!-- Filter Buttons -->
+    <div class="d-flex justify-content-center flex-wrap gap-2 mt-4" role="group">
+        <button type="button" class="btn btn-cyber-orange tournament-filter-btn active-filter px-4 py-2"
+                data-filter="all" id="btn-filter-all"
+                style="font-family:var(--font-sub);letter-spacing:1.5px;">
+            ALL EVENTS
+        </button>
+        <button type="button" class="btn btn-cyber-cyan tournament-filter-btn px-4 py-2"
+                data-filter="upcoming" id="btn-filter-upcoming"
+                style="font-family:var(--font-sub);letter-spacing:1.5px;">
+            ⏱ UPCOMING
+        </button>
+        <button type="button" class="btn btn-cyber-cyan tournament-filter-btn px-4 py-2"
+                data-filter="ongoing" id="btn-filter-ongoing"
+                style="font-family:var(--font-sub);letter-spacing:1.5px;">
+            🔴 LIVE
+        </button>
+        <button type="button" class="btn btn-cyber-cyan tournament-filter-btn px-4 py-2"
+                data-filter="completed" id="btn-filter-completed"
+                style="font-family:var(--font-sub);letter-spacing:1.5px;">
+            ✅ COMPLETED
+        </button>
+    </div>
+</div>
+
+<!-- ── Tournament Cards Grid ───────────────────────────────────────── -->
+<div class="row row-cols-1 row-cols-md-2 row-cols-xl-3 g-4 mb-5" id="tournaments-container">
+    {% for tournament in tournaments %}
+    <div class="col tournament-card-col" data-status="{{ tournament.status }}" id="t-card-col-{{ tournament.id }}">
+        <div class="glass-card h-100" style="overflow:hidden;">
+
+            <!-- Card Thumbnail -->
+            <div class="t-thumb">
+                <img src="{% url 'ff_banner' %}" alt="{{ tournament.mode }} Tournament" loading="lazy" style="width:100%; height:100%; object-fit:cover; object-position:center 25%;">
+
+                <div class="mode-label">
+                    <i class="fa-solid fa-gamepad me-1"></i>{{ tournament.mode }}
+                </div>
+                <div class="status-dot
+                    {% if tournament.status == 'Upcoming' %}bg-success
+                    {% elif tournament.status == 'Ongoing' %}bg-warning text-dark
+                    {% else %}bg-secondary{% endif %}">
+                    {% if tournament.status == 'Ongoing' %}<span class="live-dot me-1"></span>{% endif %}
+                    {{ tournament.status|upper }}
+                </div>
+            </div>
+
+            <!-- Card Body -->
+            <div class="p-3 d-flex flex-column" style="flex:1;">
+                <h5 class="text-white mb-1" style="font-family:var(--font-sub);font-weight:700;font-size:1rem;">
+                    {{ tournament.name }}
+                </h5>
+                <p class="text-muted mb-3" style="font-family:var(--font-sub);font-size:0.8rem;letter-spacing:0.5px;">
+                    <i class="fa-regular fa-calendar me-1"></i>{{ tournament.date|date:"d M Y, H:i" }} UTC
+                </p>
+
+                <!-- Stats row -->
+                <div class="row g-2 mb-3">
+                    <div class="col-6">
+                        <div style="background:rgba(0,229,255,0.06);border:1px solid rgba(0,229,255,0.15);border-radius:6px;padding:8px 10px;text-align:center;">
+                            <div style="font-family:var(--font-heading);font-size:0.9rem;color:var(--neon-cyan);">💎 {{ tournament.entry_fee }}</div>
+                            <div style="font-family:var(--font-sub);font-size:0.65rem;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;margin-top:2px;">Entry Fee</div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div style="background:rgba(255,107,0,0.06);border:1px solid rgba(255,107,0,0.15);border-radius:6px;padding:8px 10px;text-align:center;">
+                            <div style="font-family:var(--font-heading);font-size:0.9rem;color:var(--fire-orange);">💎 {{ tournament.prize_pool }}</div>
+                            <div style="font-family:var(--font-sub);font-size:0.65rem;letter-spacing:1px;color:var(--text-muted);text-transform:uppercase;margin-top:2px;">Prize Pool</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slot indicator -->
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between mb-1">
+                        <span style="font-family:var(--font-sub);font-size:0.75rem;color:var(--text-muted);">Slots Remaining</span>
+                        {% if tournament.slots_available == 0 %}
+                        <span style="font-family:var(--font-sub);font-size:0.75rem;font-weight:700;color:var(--fire-red);">
+                            {{ tournament.slots_available }} / {{ tournament.slots_total }}
+                        </span>
+                        {% else %}
+                        <span style="font-family:var(--font-sub);font-size:0.75rem;font-weight:700;color:#f0f4ff;">
+                            {{ tournament.slots_available }} / {{ tournament.slots_total }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="slot-bar">
+                        {% if tournament.slots_total > 0 %}
+                            {% widthratio tournament.slots_available tournament.slots_total 100 as slot_width %}
+                        <div class="slot-bar-fill" data-slot-width="{{ slot_width }}"></div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="mt-auto d-flex gap-2">
+                    <button type="button" class="btn btn-cyber-cyan btn-sm flex-fill"
+                            data-bs-toggle="modal" data-bs-target="#modal-t-{{ tournament.id }}">
+                        <i class="fa-solid fa-circle-info me-1"></i>DETAILS
+                    </button>
+                    {% if tournament.status == 'Upcoming' and tournament.slots_available > 0 %}
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'create_team' %}?tournament={{ tournament.id }}"
+                           class="btn btn-cyber-orange btn-sm flex-fill">
+                            <i class="fa-solid fa-fire me-1"></i>JOIN
+                        </a>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-cyber-orange btn-sm flex-fill">
+                            <i class="fa-solid fa-right-to-bracket me-1"></i>LOGIN
+                        </a>
+                        {% endif %}
+                    {% else %}
+                    <button class="btn btn-secondary btn-sm flex-fill" disabled style="font-family:var(--font-sub);font-size:0.8rem;">
+                        CLOSED
+                    </button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <i class="fa-solid fa-gamepad fa-4x text-muted mb-4 d-block"></i>
+        <h4 class="text-muted" style="font-family:var(--font-sub);">No tournaments match your filter.</h4>
+        <p class="text-muted small">Check back soon for new events!</p>
+    </div>
+    {% endfor %}
+</div>
+
+{% endblock %}
+
+{% block extra_modals %}
+    {% for tournament in tournaments %}
+    <!-- ── Detail Modal ──────────────────────────────────────────── -->
+    <div class="modal fade" id="modal-t-{{ tournament.id }}" tabindex="-1"
+         aria-labelledby="modalLabel-t-{{ tournament.id }}" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-neon-cyan" id="modalLabel-t-{{ tournament.id }}"
+                        style="font-family:var(--font-sub);font-weight:700;letter-spacing:1px;">
+                        <i class="fa-solid fa-crosshairs me-2 text-neon-orange"></i>{{ tournament.name }}
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-sm mb-3" style="color:#f0f4ff;font-family:var(--font-sub);">
+                        <tbody>
+                            <tr>
+                                <td class="text-muted">Format</td>
+                                <td class="fw-bold text-neon-orange">{{ tournament.mode }} Battle Royale</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Date & Time</td>
+                                <td class="fw-bold">{{ tournament.date|date:"F d, Y @ H:i" }} UTC</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Entry Fee</td>
+                                <td class="fw-bold text-neon-cyan">💎 {{ tournament.entry_fee }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Prize Pool</td>
+                                <td class="fw-bold text-neon-orange">💎 {{ tournament.prize_pool }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Teams Registered</td>
+                                <td class="fw-bold">{{ tournament.teams.count }} / {{ tournament.slots_total }}</td>
+                            </tr>
+                            <tr>
+                                <td class="text-muted">Status</td>
+                                <td>
+                                    <span class="badge
+                                        {% if tournament.status == 'Upcoming' %}bg-success
+                                        {% elif tournament.status == 'Ongoing' %}bg-warning text-dark
+                                        {% else %}bg-secondary{% endif %}">
+                                        {{ tournament.status|upper }}
+                                    </span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div style="background:rgba(255,107,0,0.05);border:1px solid rgba(255,107,0,0.15);border-radius:8px;padding:14px;">
+                        <h6 style="font-family:var(--font-sub);font-weight:700;color:var(--fire-orange);letter-spacing:1px;margin-bottom:8px;">
+                            ⚠️ MATCH RULES
+                        </h6>
+                        <ul style="font-family:var(--font-sub);font-size:0.85rem;color:var(--text-muted);padding-left:16px;margin:0;">
+                            <li>Join custom room at least 15 mins before start.</li>
+                            <li>Team captain coordinates lobby key distribution.</li>
+                            <li>No hacks, scripts, or third-party tools allowed.</li>
+                            <li>Violations result in immediate disqualification.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal"
+                            style="font-family:var(--font-sub);">CLOSE</button>
+                    {% if tournament.status == 'Upcoming' and tournament.slots_available > 0 %}
+                        {% if user.is_authenticated %}
+                        <a href="{% url 'create_team' %}?tournament={{ tournament.id }}"
+                           class="btn btn-cyber-orange btn-sm">
+                            <i class="fa-solid fa-fire me-1"></i>REGISTER NOW
+                        </a>
+                        {% else %}
+                        <a href="{% url 'login' %}" class="btn btn-cyber-orange btn-sm">LOGIN TO JOIN</a>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// ── Tournament filter ─────────────────────────────────────────────
+document.querySelectorAll('.tournament-filter-btn').forEach(btn => {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.tournament-filter-btn').forEach(b => b.classList.remove('active-filter','btn-cyber-orange'));
+        this.classList.add('active-filter');
+        const filter = this.dataset.filter.toLowerCase();
+        document.querySelectorAll('.tournament-card-col').forEach(card => {
+            const status = card.dataset.status.toLowerCase();
+            card.style.display = (filter === 'all' || status === filter) ? '' : 'none';
+        });
+    });
+});
+
+document.querySelectorAll('.slot-bar-fill[data-slot-width]').forEach(bar => {
+    bar.style.width = `${bar.dataset.slotWidth}%`;
+});
+</script>
+{% endblock %}

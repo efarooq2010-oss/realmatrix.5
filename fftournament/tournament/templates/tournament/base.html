@@ -1,0 +1,312 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Free Fire Tournament Arena – Compete, win Diamonds, dominate the leaderboard.">
+    <title>{% block title %}Free Fire Tournament Arena{% endblock %}</title>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@400;500;600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Theme CSS -->
+    <link rel="stylesheet" href="{% static 'tournament/css/style.css' %}">
+
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+    <!-- ── Loading Spinner ──────────────────────────────────────── -->
+    <div id="spinner-container">
+        <div class="text-center">
+            <div class="cyber-spinner mb-3"></div>
+            <h5 class="text-neon-cyan" style="font-family:var(--font-sub);letter-spacing:3px;font-size:0.9rem;">LOADING ARENA...</h5>
+        </div>
+    </div>
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!--  NAVIGATION BAR                                          -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+
+            <!-- Cool Fire Brand Logo -->
+            <a class="cool-fire-brand" href="{% if user.is_authenticated and user.is_staff %}{% url 'admin_dashboard' %}{% else %}{% url 'home' %}{% endif %}" id="nav-brand-logo">
+                <div class="flame-emblem">
+                    <div class="flame-glow-ring"></div>
+                    <svg class="flame-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="navFireGradOuter" x1="0%" y1="100%" x2="50%" y2="0%">
+                                <stop offset="0%" stop-color="#ff1a00" />
+                                <stop offset="45%" stop-color="#ff6a00" />
+                                <stop offset="100%" stop-color="#ffc800" />
+                            </linearGradient>
+                            <linearGradient id="navFireGradInner" x1="0%" y1="100%" x2="50%" y2="0%">
+                                <stop offset="0%" stop-color="#ff7b00" />
+                                <stop offset="60%" stop-color="#ffea00" />
+                                <stop offset="100%" stop-color="#ffffff" />
+                            </linearGradient>
+                        </defs>
+                        <!-- Outer Flame -->
+                        <path d="M12 2C11.5 5 9.5 7.2 9 9C8.5 7.8 8.6 6.4 8.2 5.2C6.2 8 4 11.5 4 15.2C4 19.5 7.6 23 12 23C16.4 23 20 19.5 20 15.2C20 11.8 17.8 7.5 14.5 4.5C14.2 6.5 13.2 8 12.2 9C12.5 6.5 12.3 4.2 12 2Z" fill="url(#navFireGradOuter)" />
+                        <!-- Inner Flame Core -->
+                        <path d="M12 11C11 13 9 14.5 9 17C9 18.7 10.3 20 12 20C13.7 20 15 18.7 15 17C15 15 13.5 13 12 11Z" fill="url(#navFireGradInner)" />
+                    </svg>
+                </div>
+                <div class="fire-brand-text">
+                    <span class="fire-brand-title">FREE FIRE</span>
+                    <span class="fire-brand-subtitle">TOURNAMENT ARENA</span>
+                </div>
+            </a>
+
+            <!-- Mobile Toggle -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation"
+                    style="border-color:var(--fire-orange);">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+
+                    {% if user.is_authenticated and user.is_staff %}
+                    <!-- Admin Navigation Only -->
+                    <li class="nav-item">
+                        <a class="nav-link active" href="{% url 'admin_dashboard' %}" style="color:var(--neon-cyan) !important; font-weight:700; letter-spacing:1.5px;">
+                            <i class="fa-solid fa-shield-halved me-1 text-neon-orange"></i>ADMIN CONTROL CENTER
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#section-stats">
+                            <i class="fa-solid fa-chart-line me-1"></i>OVERVIEW
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#section-news">
+                            <i class="fa-solid fa-newspaper me-1"></i>NEWS & ANNOUNCEMENTS
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#section-cashouts">
+                            <i class="fa-solid fa-money-bill-transfer me-1"></i>CASHOUTS
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#section-tournaments">
+                            <i class="fa-solid fa-trophy me-1"></i>TOURNAMENTS
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#section-users">
+                            <i class="fa-solid fa-users me-1"></i>USERS
+                        </a>
+                    </li>
+                    {% else %}
+                    <!-- Regular Player / Public Navigation -->
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'tournaments_list' %}active{% endif %}"
+                           href="{% url 'tournaments_list' %}">
+                            <i class="fa-solid fa-trophy me-1"></i>TOURNAMENTS
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'leaderboard' %}active{% endif %}"
+                           href="{% url 'leaderboard' %}">
+                            <i class="fa-solid fa-ranking-star me-1"></i>LEADERBOARD
+                        </a>
+                    </li>
+
+                    {% if user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'create_team' %}active{% endif %}"
+                           href="{% url 'create_team' %}">
+                            <i class="fa-solid fa-users me-1"></i>JOIN MATCH
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'my_tournaments' %}active{% endif %}"
+                           href="{% url 'my_tournaments' %}">
+                            <i class="fa-solid fa-gamepad me-1"></i>MY MATCHES
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'wallet' %}active{% endif %}"
+                           href="{% url 'wallet' %}">
+                            <i class="fa-solid fa-gem text-info me-1"></i>WALLET
+                        </a>
+                    </li>
+                    {% if not user.active_membership_tier %}
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.resolver_match.url_name == 'become_manager' %}active{% endif %}"
+                           href="{% url 'become_manager' %}">
+                            <i class="fa-solid fa-star me-1"></i>MANAGER
+                        </a>
+                    </li>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+
+                </ul>
+
+                <!-- ── Auth & Diamond Balance ──────────────────────── -->
+                <div class="d-flex align-items-center gap-2">
+                    {% if user.is_authenticated %}
+
+                        {% if user.is_staff %}
+                        <!-- Admin Badge -->
+                        <div class="d-flex align-items-center gap-2 px-3 py-1 rounded" 
+                             style="background:rgba(255,107,0,0.15);border:1px solid rgba(255,107,0,0.5);box-shadow:0 0 10px rgba(255,107,0,0.25);">
+                            <i class="fa-solid fa-crown text-warning" style="font-size:0.95rem;"></i>
+                            <span style="font-family:var(--font-heading);font-weight:700;color:var(--fire-orange);font-size:0.8rem;letter-spacing:1px;">
+                                MASTER ADMIN
+                            </span>
+                        </div>
+                        {% else %}
+                        <!-- Diamond Wallet Badge for Players -->
+                        <a href="{% url 'wallet' %}" class="text-decoration-none" id="user-diamond-badge" title="Diamond Wallet – 1€ = 1💎">
+                            <div class="d-flex align-items-center gap-1 px-3 py-1 rounded" 
+                                 style="background:rgba(0,229,255,0.08);border:1px solid rgba(0,229,255,0.3);">
+                                <i class="fa-solid fa-gem text-info" style="font-size:0.85rem;"></i>
+                                <span style="font-family:var(--font-sub);font-weight:700;color:var(--neon-cyan);font-size:0.9rem;">
+                                    {{ user.diamonds|default:"0.00" }}
+                                </span>
+                                <span style="font-family:var(--font-sub);font-size:0.7rem;color:var(--text-muted);letter-spacing:1px;">GEMS</span>
+                            </div>
+                        </a>
+                        {% endif %}
+
+                        <!-- User Greeting -->
+                        <span class="text-muted d-none d-xl-inline" style="font-family:var(--font-sub);font-size:0.85rem;">
+                            <strong style="color:#f0f4ff;">{{ user.full_name }}</strong>
+                        </span>
+
+                        <!-- Logout -->
+                        <a href="{% url 'logout' %}" class="btn btn-cyber-orange btn-sm" id="nav-logout-btn">
+                            <i class="fa-solid fa-right-from-bracket me-1"></i>LOGOUT
+                        </a>
+
+                    {% else %}
+
+                        <a href="{% url 'login' %}" class="btn btn-cyber-cyan btn-sm" id="nav-login-btn">
+                            <i class="fa-solid fa-right-to-bracket me-1"></i>LOGIN
+                        </a>
+                        <a href="{% url 'register_user' %}" class="btn btn-cyber-orange btn-sm" id="nav-register-btn">
+                            <i class="fa-solid fa-user-plus me-1"></i>REGISTER
+                        </a>
+
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!--  MAIN CONTENT                                            -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <main class="py-4" style="min-height:80vh;">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+
+    <!-- Modals rendered outside main for clean stacking & input interaction -->
+    {% block extra_modals %}{% endblock %}
+
+    <!-- ════════════════════════════════════════════════════════ -->
+    <!--  FOOTER                                                  -->
+    <!-- ════════════════════════════════════════════════════════ -->
+    <footer>
+        <div class="container">
+            <div class="row align-items-center gy-3">
+                <div class="col-md-4 text-center text-md-start">
+                    <div class="d-flex align-items-center justify-content-center justify-content-md-start gap-2 mb-1">
+                        <div class="flame-emblem" style="width: 32px; height: 32px; border-radius: 8px;">
+                            <svg class="flame-svg" style="width: 18px; height: 18px;" viewBox="0 0 24 24" fill="none">
+                                <path d="M12 2C11.5 5 9.5 7.2 9 9C8.5 7.8 8.6 6.4 8.2 5.2C6.2 8 4 11.5 4 15.2C4 19.5 7.6 23 12 23C16.4 23 20 19.5 20 15.2C20 11.8 17.8 7.5 14.5 4.5C14.2 6.5 13.2 8 12.2 9C12.5 6.5 12.3 4.2 12 2Z" fill="#ff6a00" />
+                                <path d="M12 11C11 13 9 14.5 9 17C9 18.7 10.3 20 12 20C13.7 20 15 18.7 15 17C15 15 13.5 13 12 11Z" fill="#ffea00" />
+                            </svg>
+                        </div>
+                        <span class="brand-footer" style="background: linear-gradient(180deg, #fff, #ff8c00); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">FF ARENA TOURNAMENT</span>
+                    </div>
+                    <p class="small text-muted mb-0" style="font-family:var(--font-sub);">© 2026 Free Fire Tournament Arena. All rights reserved.</p>
+                </div>
+                <div class="col-md-4 text-center">
+                    <div class="d-flex justify-content-center gap-2 flex-wrap" style="font-family:var(--font-sub);font-size:0.78rem;letter-spacing:1px;">
+                        {% if user.is_authenticated and user.is_staff %}
+                            <a href="{% url 'admin_dashboard' %}" class="text-neon-cyan fw-bold text-decoration-none">Admin Control Center</a>
+                            <span class="text-muted">·</span>
+                            <a href="{% url 'leaderboard' %}" class="text-muted text-decoration-none">Leaderboard</a>
+                            <span class="text-muted">·</span>
+                            <a href="{% url 'tournaments_list' %}" class="text-muted text-decoration-none">Tournaments</a>
+                        {% else %}
+                            <a href="{% url 'tournaments_list' %}" class="text-muted text-decoration-none">Tournaments</a>
+                            <span class="text-muted">·</span>
+                            <a href="{% url 'leaderboard' %}" class="text-muted text-decoration-none">Leaderboard</a>
+                            <span class="text-muted">·</span>
+                            <a href="{% url 'wallet' %}" class="text-muted text-decoration-none">Wallet</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="col-md-4 text-center text-md-end">
+                    <div class="social-links d-flex justify-content-center justify-content-md-end gap-2">
+                        <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="https://discord.com" target="_blank" aria-label="Discord"><i class="fa-brands fa-discord"></i></a>
+                        <a href="https://youtube.com" target="_blank" aria-label="YouTube"><i class="fa-brands fa-youtube"></i></a>
+                        <a href="https://tiktok.com" target="_blank" aria-label="TikTok"><i class="fa-brands fa-tiktok"></i></a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom divider -->
+            <div class="hr-neon mt-4"></div>
+            <div class="text-center">
+                <small class="text-muted" style="font-family:var(--font-sub);font-size:0.75rem;letter-spacing:1px;">
+                    POWERED BY FREE FIRE TOURNAMENT ENGINE v2.0 · 💎 DIAMOND CURRENCY SYSTEM
+                </small>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ── Back to Top ──────────────────────────────────────── -->
+    <button class="btn" id="back-to-top" title="Back to Top" aria-label="Scroll to top" style="display:none;">
+        <i class="fa-solid fa-arrow-up text-white"></i>
+    </button>
+
+    <!-- ── Toast Notifications ──────────────────────────────── -->
+    <div class="toast-container" id="toast-container-area">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="toast show mb-2" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header">
+                        <span class="fw-bold" style="font-family:var(--font-sub);color:var(--fire-orange);letter-spacing:1px;">
+                            <i class="fas fa-fire me-2"></i>ARENA ALERT
+                        </span>
+                        <button type="button" class="btn-close btn-close-white ms-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body" style="font-family:var(--font-sub);">
+                        {{ message }}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JS -->
+    <script src="{% static 'tournament/js/script.js' %}"></script>
+
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,185 @@
+{% extends 'tournament/base.html' %}
+{% load static %}
+
+{% block title %}Rules & Regulations - Free Fire Arena{% endblock %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <h1 class="text-neon-cyan font-heading display-4 fw-bold">RULES & STANDARDS</h1>
+        <p class="lead text-muted">A fair play policy and scoring systems guidelines for tournament matches.</p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Collapsible Accordion -->
+    <div class="col-lg-8 mb-4">
+        <div class="accordion border-neon-cyan p-2 rounded bg-dark bg-opacity-25" id="rulesAccordion">
+            
+            <!-- Section 1: Tournament Format -->
+            <div class="accordion-item" id="rules-format">
+                <h2 class="accordion-header" id="headingFormat">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFormat" aria-expanded="true" aria-controls="collapseFormat">
+                        1. TOURNAMENT FORMAT & STRUCTURE
+                    </button>
+                </h2>
+                <div id="collapseFormat" class="accordion-collapse collapse show" aria-labelledby="headingFormat" data-bs-parent="#rulesAccordion">
+                    <div class="accordion-body">
+                        <p>Matches are organized in a standard single-elimination bracket or league points format depending on the event size:</p>
+                        <ul>
+                            <li><strong>Solo/Duo Matches:</strong> 3 qualifying rounds, top 4 from each room advance to the final lobby.</li>
+                            <li><strong>Squad Matches:</strong> Group stages of 12 teams per lobby. Best of 3 maps (Bermuda, Purgatory, Kalahari) with overall points determining the top 3 finalists.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Scoring System -->
+            <div class="accordion-item" id="rules-scoring">
+                <h2 class="accordion-header" id="headingScoring">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseScoring" aria-expanded="false" aria-controls="collapseScoring">
+                        2. SCORING METRICS
+                    </button>
+                </h2>
+                <div id="collapseScoring" class="accordion-collapse collapse" aria-labelledby="headingScoring" data-bs-parent="#rulesAccordion">
+                    <div class="accordion-body">
+                        <p class="mb-3">Points are awarded based on both placement standings and overall kills. Each kill yields <strong>1 point</strong>.</p>
+                        
+                        <!-- Table format scoring metrics -->
+                        <div class="table-responsive">
+                            <table class="table table-cyber table-sm align-middle text-center">
+                                <thead>
+                                    <tr>
+                                        <th>PLACEMENT</th>
+                                        <th>POINTS</th>
+                                        <th>PLACEMENT</th>
+                                        <th>POINTS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="text-neon-cyan">1st Place (Booyah!)</td>
+                                        <td class="fw-bold">12 pts</td>
+                                        <td>6th - 10th Place</td>
+                                        <td>2 pts</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2nd Place</td>
+                                        <td class="fw-bold">9 pts</td>
+                                        <td>11th - 15th Place</td>
+                                        <td>1 pt</td>
+                                    </tr>
+                                    <tr>
+                                        <td>3rd Place</td>
+                                        <td class="fw-bold">7 pts</td>
+                                        <td>16th+ Place</td>
+                                        <td>0 pts</td>
+                                    </tr>
+                                    <tr>
+                                        <td>4th Place</td>
+                                        <td class="fw-bold">5 pts</td>
+                                        <td>Kill Points</td>
+                                        <td class="text-neon-orange fw-bold">1 pt / Kill</td>
+                                    </tr>
+                                    <tr>
+                                        <td>5th Place</td>
+                                        <td class="fw-bold">4 pts</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Map Rotation -->
+            <div class="accordion-item" id="rules-maps">
+                <h2 class="accordion-header" id="headingMaps">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseMaps" aria-expanded="false" aria-controls="collapseMaps">
+                        3. MAP ROTATION SCHEME
+                    </button>
+                </h2>
+                <div id="collapseMaps" class="accordion-collapse collapse" aria-labelledby="headingMaps" data-bs-parent="#rulesAccordion">
+                    <div class="accordion-body">
+                        <p>Standard mapping cycles across matches are predefined to test team adaptability:</p>
+                        <ul>
+                            <li><strong>Match 1:</strong> Bermuda (Classic BR)</li>
+                            <li><strong>Match 2:</strong> Purgatory (High Altitude Tactics)</li>
+                            <li><strong>Match 3:</strong> Kalahari (Desert Combat)</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Fair Play Policy -->
+            <div class="accordion-item" id="rules-fairplay">
+                <h2 class="accordion-header" id="headingFairPlay">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFairPlay" aria-expanded="false" aria-controls="collapseFairPlay">
+                        4. FAIR PLAY & ANTI-CHEAT STANDARDS
+                    </button>
+                </h2>
+                <div id="collapseFairPlay" class="accordion-collapse collapse" aria-labelledby="headingFairPlay" data-bs-parent="#rulesAccordion">
+                    <div class="accordion-body">
+                        <p>Our platform uses standard Garena anti-cheat measures. All forms of third-party modifications, scripts, macros, or gameplay exploits are strictly forbidden.</p>
+                        <p><strong>Reporting:</strong> Captains must capture and upload clear recording clips to report hackers within 30 minutes of match completion.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 5: Disqualification Rules -->
+            <div class="accordion-item" id="rules-disqualification">
+                <h2 class="accordion-header" id="headingDisqualification">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseDisqualification" aria-expanded="false" aria-controls="collapseDisqualification">
+                        5. DISQUALIFICATION PENALTIES
+                    </button>
+                </h2>
+                <div id="collapseDisqualification" class="accordion-collapse collapse" aria-labelledby="headingDisqualification" data-bs-parent="#rulesAccordion">
+                    <div class="accordion-body">
+                        <p>Disqualification triggers immediately under these circumstances:</p>
+                        <ul>
+                            <li>Teammates sharing accounts or letting external players match under registered credentials.</li>
+                            <li>Failure to join the game room within the 10-minute lobby countdown grace period.</li>
+                            <li>Toxic behavior, verbal abuse, or bad sportsmanship in global chats.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Alert Box & Admin Contact Area -->
+    <div class="col-lg-4">
+        <!-- Important Notes (Orange Border Highlight) -->
+        <div class="glass-card p-4 border-neon-orange mb-4 rounded bg-dark-blue">
+            <h4 class="text-neon-orange font-heading"><i class="fa-solid fa-triangle-exclamation me-2"></i>CRITICAL DIRECTIVES</h4>
+            <p class="small text-white mb-0">
+                Lobby room codes and slots keys are exclusively visible on the <strong>Match Schedule</strong> panel to registered and validated teams. Please ensure your players keep the keys private. Sharing lobby codes outside your squad will result in automatic match forfeit.
+            </p>
+        </div>
+
+        <!-- Contact Admin Section -->
+        <div class="glass-card p-4 border-neon-cyan rounded">
+            <h4 class="text-neon-cyan font-heading mb-3"><i class="fa-solid fa-headset me-2"></i>CONTACT ARBITRATOR</h4>
+            <p class="small text-muted mb-4">Have questions regarding points, disputes, or payment validation? Write to the support admins.</p>
+            
+            <form action="#" method="GET" onsubmit="showToast('Your message has been sent to the admins.', 'success'); this.reset(); return false;" id="contact-admin-form">
+                <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="Your Name" required>
+                </div>
+                <div class="mb-3">
+                    <input type="email" class="form-control" placeholder="Your Gmail" required>
+                </div>
+                <div class="mb-3">
+                    <textarea class="form-control" rows="3" placeholder="Describe the dispute or inquiry..." required></textarea>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-cyber-cyan" id="btn-submit-support">SEND INQUIRY</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

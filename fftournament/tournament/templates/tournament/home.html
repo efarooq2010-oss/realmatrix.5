@@ -1,0 +1,706 @@
+{% extends 'tournament/base.html' %}
+{% load static %}
+
+{% block title %}Free Fire Arena – #1 Tournament Portal{% endblock %}
+
+{% block extra_head %}
+<style>
+/* ── Page-specific hero with YouTube Background Video ───────────────── */
+.hero-section {
+    position: relative;
+    background: #050810;
+    overflow: hidden;
+    border-radius: 18px;
+    border: 2px solid rgba(255, 107, 0, 0.45);
+    box-shadow: 0 0 35px rgba(255, 107, 0, 0.25), 0 0 20px rgba(0, 229, 255, 0.2);
+    min-height: 560px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 75px 20px 55px;
+}
+.hero-video-bg {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%; height: 100%;
+    overflow: hidden;
+    z-index: 1;
+    background: #050810;
+}
+.hero-video-bg iframe,
+.hero-video-bg div#hero-youtube-player {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    min-width: 100%;
+    min-height: 100%;
+    transform: translate(-50%, -50%) scale(1.35);
+    border: none;
+    pointer-events: none;
+}
+@media (min-aspect-ratio: 16/9) {
+    .hero-video-bg iframe,
+    .hero-video-bg div#hero-youtube-player {
+        height: 56.25vw;
+        min-height: 100%;
+    }
+}
+@media (max-aspect-ratio: 16/9) {
+    .hero-video-bg iframe,
+    .hero-video-bg div#hero-youtube-player {
+        width: 177.78vh;
+        min-width: 100%;
+    }
+}
+.hero-video-vignette {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(circle at center, rgba(5, 8, 16, 0.58) 0%, rgba(5, 8, 16, 0.85) 65%, rgba(5, 8, 16, 0.98) 100%);
+    pointer-events: none;
+    z-index: 2;
+}
+.hero-video-controls {
+    position: absolute;
+    top: 18px;
+    right: 20px;
+    display: flex;
+    gap: 8px;
+    z-index: 10;
+}
+.hero-content-wrapper {
+    position: relative;
+    z-index: 4;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+/* ── Animated number counter ─────────────────────────────────────────── */
+.animate-prize { transition: none; }
+
+/* ── Feature section accent lines ───────────────────────────────────── */
+.features-section { margin: 56px 0; }
+
+
+/* ── FF Squad Showcase Section ───────────────────────────────────────── */
+.ff-squad-showcase-container {
+    position: relative;
+    border-radius: 18px;
+    overflow: hidden;
+    background:
+        linear-gradient(0deg, rgba(5,8,16,0.95) 0%, rgba(5,8,16,0.70) 50%, rgba(5,8,16,0.40) 100%),
+        url('{% url "ff_banner" %}') center/cover no-repeat;
+    border: 2px solid rgba(255, 107, 0, 0.45);
+    box-shadow: 0 0 35px rgba(255, 107, 0, 0.25), 0 0 20px rgba(0, 229, 255, 0.2);
+    min-height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    transition: all 0.4s ease;
+}
+.ff-squad-showcase-container:hover {
+    border-color: var(--neon-cyan);
+    box-shadow: 0 0 45px rgba(0, 229, 255, 0.35), 0 0 25px rgba(255, 107, 0, 0.3);
+}
+.ff-squad-badge {
+    position: absolute;
+    top: 18px;
+    left: 20px;
+    background: linear-gradient(135deg, var(--fire-red), var(--fire-orange));
+    color: #fff;
+    font-family: var(--font-sub);
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 2px;
+    padding: 6px 18px;
+    border-radius: 30px;
+    box-shadow: 0 0 16px rgba(255, 107, 0, 0.6);
+    text-transform: uppercase;
+    z-index: 4;
+}
+.btn-video-control {
+    background: rgba(10, 14, 26, 0.82);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #fff;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.78rem;
+    font-family: var(--font-sub);
+    font-weight: 700;
+    letter-spacing: 1px;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.btn-video-control:hover {
+    background: rgba(255, 107, 0, 0.35);
+    border-color: var(--fire-orange);
+    color: #fff;
+    box-shadow: 0 0 12px rgba(255, 107, 0, 0.5);
+    transform: translateY(-1px);
+}
+.ff-squad-overlay {
+    position: relative;
+    padding: 30px 24px 24px;
+    z-index: 4;
+}
+@media (max-width: 768px) {
+    .hero-section {
+        min-height: 600px;
+        padding: 50px 14px 30px;
+    }
+    .hero-video-bg iframe,
+    .hero-video-bg div#hero-youtube-player {
+        transform: translate(-50%, -50%) scale(2.2);
+    }
+    .hero-video-controls {
+        top: 12px;
+        right: 12px;
+    }
+    .ff-squad-showcase-container {
+        min-height: 480px;
+    }
+    .ff-squad-badge {
+        font-size: 0.72rem;
+        padding: 4px 12px;
+        top: 12px;
+        left: 12px;
+    }
+    .btn-video-control {
+        font-size: 0.7rem;
+        padding: 4px 10px;
+    }
+    .ff-squad-overlay {
+        padding: 20px 16px 16px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!--  HERO SECTION                                               -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="row">
+    <div class="col-12">
+        <div class="hero-section mb-5">
+
+            <!-- Hero Video Background (replaces old static Be Original photo) -->
+            <div class="hero-video-bg">
+                <div id="hero-youtube-player"></div>
+            </div>
+
+            <!-- Dark Vignette for contrast & crisp readability -->
+            <div class="hero-video-vignette"></div>
+
+            <!-- Video Sound & Play/Pause Controls -->
+            <div class="hero-video-controls">
+                <button type="button" class="btn-video-control" id="btn-hero-toggle-sound" title="Toggle Sound">
+                    <i class="fa-solid fa-volume-xmark" id="hero-sound-icon"></i>
+                    <span id="hero-sound-text">UNMUTE</span>
+                </button>
+                <button type="button" class="btn-video-control" id="btn-hero-toggle-play" title="Play / Pause">
+                    <i class="fa-solid fa-pause" id="hero-play-icon"></i>
+                    <span id="hero-play-text">PAUSE</span>
+                </button>
+            </div>
+
+            <!-- Overlaid Hero Content (directly above the video) -->
+            <div class="hero-content-wrapper">
+                <div class="hero-fire-badge d-inline-flex align-items-center gap-2">
+                    <svg class="flame-svg" style="width: 16px; height: 16px;" viewBox="0 0 24 24" fill="none">
+                        <path d="M12 2C11.5 5 9.5 7.2 9 9C8.5 7.8 8.6 6.4 8.2 5.2C6.2 8 4 11.5 4 15.2C4 19.5 7.6 23 12 23C16.4 23 20 19.5 20 15.2C20 11.8 17.8 7.5 14.5 4.5C14.2 6.5 13.2 8 12.2 9C12.5 6.5 12.3 4.2 12 2Z" fill="#ffffff" />
+                        <path d="M12 11C11 13 9 14.5 9 17C9 18.7 10.3 20 12 20C13.7 20 15 18.7 15 17C15 15 13.5 13 12 11Z" fill="#ffea00" />
+                    </svg>
+                    <span>SEASON 2026 — LIVE ARENA</span>
+                </div>
+
+                <h1 class="mb-2">FREE FIRE<br><span class="text-neon-cyan">TOURNAMENT</span> ARENA</h1>
+                <p class="lead mb-4">
+                    Enter the battleground. Form your squad. Dominate the leaderboard.<br>
+                    <span style="color:var(--fire-orange);font-weight:600;">Win real Diamond prizes.</span>
+                </p>
+
+                <!-- ── Countdown to Next Tournament ─────────────────────── -->
+                {% if next_tournament %}
+                <div class="mb-4">
+                    <p class="font-sub text-muted small text-uppercase mb-2" style="letter-spacing:2px;">
+                        ⏱ NEXT MATCH:
+                        <strong class="text-white" style="font-family:var(--font-sub);">{{ next_tournament.name }}</strong>
+                    </p>
+                    <div class="countdown-box" id="countdown-timer" data-date="{{ next_tournament.date|date:'Y-m-d H:i:s' }}">
+                        <div class="d-flex align-items-center justify-content-center">
+                            <div class="text-center px-3">
+                                <h2 id="days">00</h2>
+                                <small class="text-muted text-uppercase" style="letter-spacing:1px;font-size:0.7rem;">Days</small>
+                            </div>
+                            <div class="fs-2 text-neon-cyan px-1 pb-3">:</div>
+                            <div class="text-center px-3">
+                                <h2 id="hours">00</h2>
+                                <small class="text-muted text-uppercase" style="letter-spacing:1px;font-size:0.7rem;">Hrs</small>
+                            </div>
+                            <div class="fs-2 text-neon-cyan px-1 pb-3">:</div>
+                            <div class="text-center px-3">
+                                <h2 id="minutes">00</h2>
+                                <small class="text-muted text-uppercase" style="letter-spacing:1px;font-size:0.7rem;">Mins</small>
+                            </div>
+                            <div class="fs-2 text-neon-cyan px-1 pb-3">:</div>
+                            <div class="text-center px-3">
+                                <h2 id="seconds">00</h2>
+                                <small class="text-muted text-uppercase" style="letter-spacing:1px;font-size:0.7rem;">Secs</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- ── CTA Buttons ─────────────────────────────────────── -->
+                <div class="d-flex flex-wrap justify-content-center gap-3 mt-3">
+                    {% if not user.is_authenticated %}
+                    <a href="{% url 'register_user' %}" class="btn btn-cyber-orange btn-lg" id="hero-register-btn">
+                        <i class="fa-solid fa-user-plus me-2"></i>JOIN THE ARENA
+                    </a>
+                    {% endif %}
+                    <a href="{% url 'tournaments_list' %}" class="btn btn-cyber-cyan btn-lg" id="hero-view-tournaments-btn">
+                        <i class="fa-solid fa-trophy me-2"></i>VIEW TOURNAMENTS
+                    </a>
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'create_team' %}" class="btn btn-cyber-orange btn-lg">
+                        <i class="fa-solid fa-users me-2"></i>JOIN NOW
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!--  QUICK STATS STRIP                                          -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="stat-strip mb-5">
+    <div class="stat-item">
+        <span class="stat-number" id="stat-players">5,000+</span>
+        <span class="stat-label">Players Registered</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-number">💎 50K</span>
+        <span class="stat-label">Total Prize Pool</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-number">120+</span>
+        <span class="stat-label">Tournaments Hosted</span>
+    </div>
+    <div class="stat-item">
+        <span class="stat-number text-neon-cyan">LIVE</span>
+        <span class="stat-label">24/7 Support</span>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!--  FEATURED FREE FIRE SQUAD SHOWCASE                           -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="ff-squad-showcase-container" id="ff-showcase-main-card">
+
+            <!-- Top Badge -->
+            <div class="ff-squad-badge">
+                <i class="fa-solid fa-fire me-1"></i> FREE FIRE BATTLEGROUND
+            </div>
+
+            <!-- Squad Information & Action Buttons -->
+            <div class="ff-squad-overlay w-100">
+                <div class="container-fluid p-0">
+                    <div class="row align-items-end gy-3">
+                        <div class="col-lg-8">
+                            <h2 class="font-heading text-white fw-bold mb-2" style="text-shadow: 0 0 20px rgba(255,107,0,0.85), 0 2px 4px #000; letter-spacing: 2px; font-size: clamp(1.4rem, 2.8vw, 2.2rem);">
+                                READY YOUR SQUAD · DOMINATE THE ARENA
+                            </h2>
+                            <p class="text-neon-cyan font-sub mb-3" style="font-size: 1.05rem; letter-spacing: 1px; text-shadow: 0 1px 4px #000;">
+                                Join thousands of pro players competing daily for Diamond prize pools and glory.
+                            </p>
+
+                            <!-- Feature highlights with glassmorphic cards -->
+                            <div class="row g-2 mb-3">
+                                <div class="col-sm-4">
+                                    <div class="p-2 px-3 rounded" style="background: rgba(10,14,26,0.82); backdrop-filter: blur(8px); border: 1px solid rgba(255,107,0,0.35);">
+                                        <div class="text-neon-orange font-heading fw-bold small">
+                                            <i class="fa-solid fa-crosshairs me-1"></i> 50 PLAYERS
+                                        </div>
+                                        <small class="text-light font-sub" style="font-size: 0.75rem;">10 min intense matches</small>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="p-2 px-3 rounded" style="background: rgba(10,14,26,0.82); backdrop-filter: blur(8px); border: 1px solid rgba(0,229,255,0.35);">
+                                        <div class="text-neon-cyan font-heading fw-bold small">
+                                            <i class="fa-solid fa-gem me-1"></i> 💎 PRIZE POOLS
+                                        </div>
+                                        <small class="text-light font-sub" style="font-size: 0.75rem;">Instant diamond payouts</small>
+                                    </div>
+                                </div>
+                                <div class="col-sm-4">
+                                    <div class="p-2 px-3 rounded" style="background: rgba(10,14,26,0.82); backdrop-filter: blur(8px); border: 1px solid rgba(255,215,0,0.35);">
+                                        <div class="text-warning font-heading fw-bold small">
+                                            <i class="fa-solid fa-key me-1"></i> CUSTOM ROOMS
+                                        </div>
+                                        <small class="text-light font-sub" style="font-size: 0.75rem;">Verified room keys</small>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-wrap gap-2">
+                                <a href="{% url 'tournaments_list' %}" class="btn btn-cyber-orange btn-lg px-4">
+                                    <i class="fa-solid fa-crosshairs me-2"></i> ENTER LOBBY
+                                </a>
+                                <a href="{% url 'leaderboard' %}" class="btn btn-cyber-cyan btn-lg px-4">
+                                    <i class="fa-solid fa-ranking-star me-2"></i> RANKINGS
+                                </a>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-4 d-none d-lg-block text-end">
+                            <div class="p-3 rounded-4 d-inline-block text-center" style="background: rgba(5,8,16,0.85); backdrop-filter: blur(8px); border: 1px solid rgba(0,229,255,0.3); box-shadow: 0 0 25px rgba(0,229,255,0.15); min-width: 220px;">
+                                <i class="fa-solid fa-trophy text-warning mb-2" style="font-size: 2.5rem; filter: drop-shadow(0 0 12px rgba(255,215,0,0.6));"></i>
+                                <h5 class="font-heading text-white fw-bold mb-1">PRO LEAGUE 2026</h5>
+                                <p class="text-muted small font-sub mb-3" style="font-size: 0.8rem;">Daily Solo, Duo &amp; Squad Brackets</p>
+                                <a href="{% url 'tournaments_list' %}" class="btn btn-outline-neon-cyan btn-sm font-heading w-100">
+                                    EXPLORE MATCHES
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!--  PRIZE POOL DISTRIBUTION                                    -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="mb-5">
+    <div class="section-title">
+        <h2><i class="fa-solid fa-trophy me-2"></i>Prize Distribution</h2>
+    </div>
+    <div class="row g-4 text-center">
+        <div class="col-md-4">
+            <div class="prize-card first h-100">
+                <i class="fa-solid fa-trophy fa-3x mb-3" style="color:var(--gold);filter:drop-shadow(0 0 12px var(--gold));"></i>
+                <div class="rank-label text-warning" style="letter-spacing:3px;">1ST PLACE</div>
+                <div class="prize-amount text-gold animate-prize" data-value="500" id="first-prize-val">💎0</div>
+                <small class="text-muted" style="font-family:var(--font-sub);">+ Exclusive Season Title</small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="prize-card second h-100">
+                <i class="fa-solid fa-medal fa-3x mb-3" style="color:#c0c0c0;filter:drop-shadow(0 0 10px rgba(192,192,192,0.5));"></i>
+                <div class="rank-label" style="color:#c0c0c0;letter-spacing:3px;">2ND PLACE</div>
+                <div class="prize-amount animate-prize" style="color:#c0c0c0;" data-value="300" id="second-prize-val">💎0</div>
+                <small class="text-muted" style="font-family:var(--font-sub);">+ Silver Player Badge</small>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="prize-card third h-100">
+                <i class="fa-solid fa-award fa-3x mb-3" style="color:#cd7f32;filter:drop-shadow(0 0 10px rgba(205,127,50,0.5));"></i>
+                <div class="rank-label" style="color:#cd7f32;letter-spacing:3px;">3RD PLACE</div>
+                <div class="prize-amount animate-prize" style="color:#cd7f32;" data-value="200" id="third-prize-val">💎0</div>
+                <small class="text-muted" style="font-family:var(--font-sub);">+ Bronze Battle Pass</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!--  FEATURED MATCH + RECENT WINNERS                            -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="row g-4 mb-5">
+    <!-- Featured Tournament -->
+    <div class="col-lg-6">
+        <div class="glass-card p-4 h-100">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="text-neon-cyan mb-0" style="font-size:1rem;">
+                    <i class="fa-solid fa-fire me-2 text-neon-orange"></i>FEATURED MATCH
+                </h3>
+                <span class="badge" style="background:linear-gradient(135deg,var(--fire-red),var(--fire-orange));font-family:var(--font-sub);letter-spacing:1px;">🔴 HOT</span>
+            </div>
+
+            {% if featured_tournament %}
+            <!-- Thumbnail strip -->
+            <div class="tournament-card-thumb rounded mb-3" style="height:140px;background:linear-gradient(135deg,rgba(255,42,0,0.15),rgba(0,229,255,0.05));position:relative;overflow:hidden;">
+                <img src="{% url 'ff_banner' %}" alt="Featured Tournament" style="width:100%;height:140px;object-fit:cover;object-position:center 25%;opacity:0.75;border-radius:8px;">
+                <div style="position:absolute;top:10px;right:10px;">
+                    <span class="badge" style="background:rgba(0,0,0,0.7);border:1px solid var(--fire-orange);color:var(--fire-orange);font-family:var(--font-sub);font-weight:700;">{{ featured_tournament.mode }}</span>
+                </div>
+            </div>
+
+            <h4 class="text-white mb-3" style="font-family:var(--font-sub);font-size:1.15rem;font-weight:700;">{{ featured_tournament.name }}</h4>
+            <ul class="list-unstyled mb-3" style="font-family:var(--font-sub);">
+                <li class="d-flex justify-content-between py-1 border-bottom border-secondary">
+                    <span class="text-muted">Mode</span>
+                    <strong class="text-neon-orange">{{ featured_tournament.mode }}</strong>
+                </li>
+                <li class="d-flex justify-content-between py-1 border-bottom border-secondary">
+                    <span class="text-muted">Date</span>
+                    <strong class="text-white">{{ featured_tournament.date|date:"d M Y – H:i" }}</strong>
+                </li>
+                <li class="d-flex justify-content-between py-1 border-bottom border-secondary">
+                    <span class="text-muted">Entry Fee</span>
+                    <strong class="text-neon-cyan">💎 {{ featured_tournament.entry_fee }}</strong>
+                </li>
+                <li class="d-flex justify-content-between py-1">
+                    <span class="text-muted">Slots Left</span>
+                    <strong class="text-fire-red">{{ featured_tournament.slots_available }} / {{ featured_tournament.slots_total }}</strong>
+                </li>
+            </ul>
+            <div class="d-flex justify-content-between align-items-center">
+                <span class="badge
+                    {% if featured_tournament.status == 'Upcoming' %}bg-success
+                    {% elif featured_tournament.status == 'Ongoing' %}bg-warning text-dark
+                    {% else %}bg-secondary{% endif %}"
+                    style="font-family:var(--font-sub);font-size:0.8rem;letter-spacing:1px;">
+                    {{ featured_tournament.status|upper }}
+                </span>
+                <a href="{% url 'tournaments_list' %}" class="btn btn-cyber-orange btn-sm">
+                    <i class="fa-solid fa-crosshairs me-1"></i>JOIN MATCH
+                </a>
+            </div>
+
+            {% else %}
+            <div class="text-center py-4">
+                <i class="fa-solid fa-gamepad fa-3x text-muted mb-3 d-block"></i>
+                <p class="text-muted" style="font-family:var(--font-sub);">No tournaments currently featured. Check back soon!</p>
+                <a href="{% url 'tournaments_list' %}" class="btn btn-cyber-cyan btn-sm">Browse All Tournaments</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Winners -->
+    <div class="col-lg-6">
+        <div class="glass-card p-4 h-100">
+            <h3 class="text-neon-orange mb-4" style="font-size:1rem;">
+                <i class="fa-solid fa-crown me-2 text-gold"></i>RECENT WINNERS
+            </h3>
+            <div>
+                {% for winner in recent_winners %}
+                <div class="d-flex justify-content-between align-items-center py-3 border-bottom" style="border-color:rgba(255,255,255,0.06)!important;">
+                    <div class="d-flex align-items-center gap-3">
+                        <div style="width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--fire-red),var(--fire-orange));display:flex;align-items:center;justify-content:center;font-size:1.1rem;box-shadow:0 0 10px rgba(255,107,0,0.3);">
+                            👑
+                        </div>
+                        <div>
+                            <div style="font-family:var(--font-sub);font-weight:700;color:var(--neon-cyan);">{{ winner.team_name }}</div>
+                            <small class="text-muted" style="font-size:0.78rem;">{{ winner.captain }} · {{ winner.tournament }}</small>
+                        </div>
+                    </div>
+                    <div class="text-end">
+                        <div class="badge" style="background:rgba(0,229,255,0.1);border:1px solid var(--neon-cyan);color:var(--neon-cyan);font-family:var(--font-sub);">{{ winner.kills }} Kills</div>
+                        <div class="text-neon-orange fw-bold small mt-1">{{ winner.points }} PTS</div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="text-center py-5">
+                    <i class="fa-solid fa-medal fa-3x text-muted mb-3 d-block"></i>
+                    <p class="text-muted" style="font-family:var(--font-sub);">Winners will appear here after matches complete.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!--  HOW IT WORKS SECTION                                       -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<div class="mb-5">
+    <div class="section-title">
+        <h2><i class="fa-solid fa-gamepad me-2"></i>How It Works</h2>
+    </div>
+    <div class="row g-4">
+        <div class="col-md-3">
+            <div class="feature-box">
+                <span class="feature-icon">📝</span>
+                <h5 class="text-neon-cyan mb-2" style="font-size:0.95rem;">1. REGISTER</h5>
+                <p class="text-muted mb-0" style="font-family:var(--font-sub);font-size:0.9rem;">Create your account and set up your Free Fire player profile.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="feature-box">
+                <span class="feature-icon">💎</span>
+                <h5 class="text-neon-cyan mb-2" style="font-size:0.95rem;">2. TOP UP</h5>
+                <p class="text-muted mb-0" style="font-family:var(--font-sub);font-size:0.9rem;">Add Diamonds to your wallet. 1€ = 1 💎. All payments use Diamonds.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="feature-box">
+                <span class="feature-icon">⚔️</span>
+                <h5 class="text-neon-cyan mb-2" style="font-size:0.95rem;">3. JOIN MATCH</h5>
+                <p class="text-muted mb-0" style="font-family:var(--font-sub);font-size:0.9rem;">Browse tournaments, pay entry fee in Diamonds, join Solo / Duo / Squad.</p>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="feature-box">
+                <span class="feature-icon">🏆</span>
+                <h5 class="text-neon-cyan mb-2" style="font-size:0.95rem;">4. WIN PRIZES</h5>
+                <p class="text-muted mb-0" style="font-family:var(--font-sub);font-size:0.9rem;">Dominate the lobby. Winners receive Diamond prizes + exclusive titles.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+// ── Animated Prize Counters ───────────────────────────────────────
+document.querySelectorAll('.animate-prize').forEach(el => {
+    const target = parseInt(el.dataset.value);
+    let current = 0;
+    const step = Math.ceil(target / 60);
+    const timer = setInterval(() => {
+        current = Math.min(current + step, target);
+        el.textContent = `💎${current}`;
+        if (current >= target) clearInterval(timer);
+    }, 30);
+});
+
+// ── Countdown Timer ───────────────────────────────────────────────
+const timerEl = document.getElementById('countdown-timer');
+if (timerEl) {
+    const target = new Date(timerEl.dataset.date + ' UTC').getTime();
+    const tick = () => {
+        const now = Date.now();
+        const diff = Math.max(target - now, 0);
+        const d  = Math.floor(diff / 86400000);
+        const h  = Math.floor((diff % 86400000) / 3600000);
+        const m  = Math.floor((diff % 3600000)  / 60000);
+        const s  = Math.floor((diff % 60000)    / 1000);
+        document.getElementById('days').textContent    = String(d).padStart(2,'0');
+        document.getElementById('hours').textContent   = String(h).padStart(2,'0');
+        document.getElementById('minutes').textContent = String(m).padStart(2,'0');
+        document.getElementById('seconds').textContent = String(s).padStart(2,'0');
+        if (diff > 0) setTimeout(tick, 1000);
+    };
+    tick();
+}
+
+// ── Hero YouTube Video Player Background ──────────────────────────
+var ffHeroPlayer = null;
+
+function loadYouTubeIframeAPI() {
+    if (window.YT && window.YT.Player) {
+        initHeroPlayer();
+    } else {
+        var tag = document.createElement('script');
+        tag.src = "https://www.youtube.com/iframe_api";
+        var firstScriptTag = document.getElementsByTagName('script')[0];
+        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+    }
+}
+
+window.onYouTubeIframeAPIReady = function() {
+    initHeroPlayer();
+};
+
+function initHeroPlayer() {
+    var playerContainer = document.getElementById('hero-youtube-player');
+    if (!playerContainer || ffHeroPlayer) return;
+
+    try {
+        ffHeroPlayer = new YT.Player('hero-youtube-player', {
+            videoId: 'oq2Rz2I11l0',
+            playerVars: {
+                'autoplay': 1,
+                'mute': 1,            // Start muted for instant autoplay across all modern browsers
+                'controls': 0,
+                'disablekb': 1,
+                'fs': 0,
+                'loop': 1,
+                'playlist': 'oq2Rz2I11l0',
+                'modestbranding': 1,
+                'rel': 0,
+                'playsinline': 1,
+                'enablejsapi': 1
+            },
+            events: {
+                'onReady': function(event) {
+                    try {
+                        event.target.mute();
+                        event.target.playVideo();
+                    } catch(e) {}
+                },
+                'onStateChange': function(event) {
+                    // Seamless loop fallback if playlist loop doesn't restart automatically
+                    if (event.data === 0) { // 0 = YT.PlayerState.ENDED
+                        try {
+                            event.target.playVideo();
+                        } catch(e) {}
+                    }
+                }
+            }
+        });
+    } catch(err) {
+        console.warn('Hero YouTube Player initialization fallback:', err);
+    }
+}
+
+// Bind hero audio & playback controls on DOM load
+loadYouTubeIframeAPI();
+
+var btnHeroToggleSound = document.getElementById('btn-hero-toggle-sound');
+var heroSoundIcon = document.getElementById('hero-sound-icon');
+var heroSoundText = document.getElementById('hero-sound-text');
+
+if (btnHeroToggleSound) {
+    btnHeroToggleSound.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!ffHeroPlayer || typeof ffHeroPlayer.isMuted !== 'function') return;
+
+        if (ffHeroPlayer.isMuted()) {
+            ffHeroPlayer.unMute();
+            ffHeroPlayer.setVolume(85);
+            if (heroSoundIcon) heroSoundIcon.className = 'fa-solid fa-volume-high';
+            if (heroSoundText) heroSoundText.textContent = 'MUTE';
+        } else {
+            ffHeroPlayer.mute();
+            if (heroSoundIcon) heroSoundIcon.className = 'fa-solid fa-volume-xmark';
+            if (heroSoundText) heroSoundText.textContent = 'UNMUTE';
+        }
+    });
+}
+
+var btnHeroTogglePlay = document.getElementById('btn-hero-toggle-play');
+var heroPlayIcon = document.getElementById('hero-play-icon');
+var heroPlayText = document.getElementById('hero-play-text');
+
+if (btnHeroTogglePlay) {
+    btnHeroTogglePlay.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!ffHeroPlayer || typeof ffHeroPlayer.getPlayerState !== 'function') return;
+
+        var state = ffHeroPlayer.getPlayerState();
+        if (state === 1) { // 1 = Playing
+            ffHeroPlayer.pauseVideo();
+            if (heroPlayIcon) heroPlayIcon.className = 'fa-solid fa-play';
+            if (heroPlayText) heroPlayText.textContent = 'PLAY';
+        } else {
+            ffHeroPlayer.playVideo();
+            if (heroPlayIcon) heroPlayIcon.className = 'fa-solid fa-pause';
+            if (heroPlayText) heroPlayText.textContent = 'PAUSE';
+        }
+    });
+}
+</script>
+{% endblock %}

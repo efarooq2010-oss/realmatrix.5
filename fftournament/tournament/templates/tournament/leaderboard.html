@@ -1,0 +1,136 @@
+{% extends 'tournament/base.html' %}
+{% load static %}
+
+<!-- Page Title -->
+{% block title %}Arena Leaderboard - Free Fire Tournament{% endblock %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <h1 class="text-neon-cyan font-heading display-4 fw-bold">STANDINGS LEADERBOARD</h1>
+        <p class="lead text-muted">Aggregated live scores, total squad kills, and general rankings.</p>
+    </div>
+</div>
+
+<!-- Leaderboard Dashboard Controls -->
+<div class="row mb-4 align-items-center">
+    <!-- Search Bar -->
+    <div class="col-md-8 mb-3 mb-md-0">
+        <div class="input-group border-neon-cyan rounded">
+            <span class="input-group-text bg-dark border-0 text-neon-cyan"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" id="leaderboard-search" class="form-control border-0 text-white" placeholder="Search by team name or captain...">
+        </div>
+    </div>
+    <!-- Refresh Button -->
+    <div class="col-md-4 text-md-end">
+        <button class="btn btn-cyber-cyan w-100" id="refresh-leaderboard">
+            <i class="fa-solid fa-arrows-rotate me-2"></i>REFRESH STANDINGS
+        </button>
+    </div>
+</div>
+
+<!-- Standings Table -->
+<div class="row mb-5">
+    <div class="col-12">
+        <div class="table-responsive glass-card border-neon-cyan p-2">
+            <table class="table table-cyber align-middle mb-0" id="leaderboard-table">
+                <thead>
+                    <tr>
+                        <th scope="col" style="width: 10%;">RANK</th>
+                        <th scope="col" style="width: 30%;">TEAM NAME</th>
+                        <th scope="col" style="width: 20%;">CAPTAIN</th>
+                        <th scope="col" class="text-center" style="width: 15%;">MATCHES</th>
+                        <th scope="col" class="text-center" style="width: 12%;">KILLS</th>
+                        <th scope="col" class="text-center" style="width: 13%;">POINTS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in page_obj %}
+                        <tr class="{% if item.rank == 1 %}rank-1{% elif item.rank == 2 %}rank-2{% elif item.rank == 3 %}rank-3{% endif %}" id="leaderboard-row-{{ item.rank }}">
+                            <!-- Rank column -->
+                            <td>
+                                <span class="fs-5 font-heading">
+                                    {% if item.rank == 1 %}
+                                        🥇 1
+                                    {% elif item.rank == 2 %}
+                                        🥈 2
+                                    {% elif item.rank == 3 %}
+                                        🥉 3
+                                    {% else %}
+                                        {{ item.rank }}
+                                    {% endif %}
+                                </span>
+                            </td>
+                            <!-- Team Name -->
+                            <td>
+                                <strong class="team-name text-white">{{ item.team_name }}</strong>
+                            </td>
+                            <!-- Captain Name -->
+                            <td class="captain-name text-light">
+                                {{ item.captain }}
+                            </td>
+                            <!-- Matches -->
+                            <td class="text-center text-light">{{ item.matches }}</td>
+                            <!-- Kills -->
+                            <td class="text-center text-neon-cyan fw-bold">{{ item.kills }}</td>
+                            <!-- Points -->
+                            <td class="text-center text-neon-orange fw-bold fs-5">{{ item.points }}</td>
+                        </tr>
+                    {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">No team data listed yet. Play matches to populate standings.</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Pagination Controls -->
+{% if page_obj.has_other_pages %}
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="Leaderboard Page Navigation">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link bg-dark border-neon-cyan text-neon-cyan" href="?page={{ page_obj.previous_page_number }}" id="pagination-prev">
+                            <i class="fa-solid fa-chevron-left"></i>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link bg-dark border-secondary text-muted"><i class="fa-solid fa-chevron-left"></i></span>
+                    </li>
+                {% endif %}
+
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link bg-cyber-cyan border-neon-cyan text-dark fw-bold">{{ num }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link bg-dark border-neon-cyan text-neon-cyan" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a class="page-link bg-dark border-neon-cyan text-neon-cyan" href="?page={{ page_obj.next_page_number }}" id="pagination-next">
+                            <i class="fa-solid fa-chevron-right"></i>
+                        </a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <span class="page-link bg-dark border-secondary text-muted"><i class="fa-solid fa-chevron-right"></i></span>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    </div>
+</div>
+{% endif %}
+{% endblock %}

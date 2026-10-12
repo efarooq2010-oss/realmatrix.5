@@ -1,0 +1,297 @@
+{% extends 'tournament/base.html' %}
+{% load static %}
+
+{% block title %}Diamond Wallet - Free Fire Arena{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12 text-center">
+        <h1 class="text-neon-cyan font-heading display-4 fw-bold">
+            <i class="fa-solid fa-gem text-info me-2"></i>DIAMOND WALLET
+        </h1>
+        <p class="lead text-muted">Manage your 💎 Diamond currency balance, top-up funds, and cash out to real money (1€ = 1💎).</p>
+    </div>
+</div>
+
+<!-- Balance Summary Card -->
+<div class="row justify-content-center mb-5">
+    <div class="col-md-8 col-lg-6">
+        <div class="glass-card p-4 border-neon-cyan text-center position-relative overflow-hidden" style="background: linear-gradient(135deg, rgba(0,255,255,0.1), rgba(255,111,0,0.1));">
+            <span class="badge bg-cyber-cyan text-dark font-heading px-3 py-2 fs-6 mb-3">1 EURO = 1 DIAMOND (1€ = 1💎)</span>
+            
+            <p class="text-uppercase text-muted font-heading small mb-1">AVAILABLE BALANCE</p>
+            <h1 class="display-3 font-heading text-white fw-bold mb-2">
+                💎 {{ user.diamonds|default:"0.00" }}
+            </h1>
+            <p class="text-neon-orange font-heading fs-5 mb-4">
+                Real Money Value: <strong>€{{ user.diamonds|default:"0.00" }}</strong>
+            </p>
+
+            <div class="d-flex gap-3 justify-content-center">
+                <button type="button" class="btn btn-cyber-cyan btn-lg font-heading px-4" data-bs-toggle="modal" data-bs-target="#topUpModal">
+                    <i class="fa-solid fa-plus-circle me-2"></i>TOP UP DIAMONDS
+                </button>
+                <button type="button" class="btn btn-cyber-orange btn-lg font-heading px-4" data-bs-toggle="modal" data-bs-target="#cashOutModal">
+                    <i class="fa-solid fa-money-bill-transfer me-2"></i>CASH OUT TO REAL MONEY
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Transaction History Section -->
+<div class="row">
+    <div class="col-12">
+        <div class="glass-card p-4 border-secondary">
+            <h3 class="text-neon-orange font-heading mb-4">
+                <i class="fa-solid fa-clock-rotate-left me-2"></i>TRANSACTION HISTORY
+            </h3>
+            
+            <div class="table-responsive">
+                <table class="table table-dark table-hover align-middle mb-0 small">
+                    <thead class="border-bottom border-neon-cyan">
+                        <tr class="font-heading text-neon-cyan">
+                            <th>TYPE</th>
+                            <th>DESCRIPTION</th>
+                            <th>DIAMONDS (💎)</th>
+                            <th>EUROS (€)</th>
+                            <th>DATE & TIME</th>
+                            <th>STATUS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tx in transactions %}
+                        <tr>
+                            <td>
+                                {% if tx.transaction_type == 'TOPUP' %}
+                                    <span class="badge bg-success text-white font-heading">TOP UP (+💎)</span>
+                                {% elif tx.transaction_type == 'CASHOUT' %}
+                                    <span class="badge bg-danger text-white font-heading">CASH OUT (-💎)</span>
+                                {% elif tx.transaction_type == 'ENTRY_FEE' %}
+                                    <span class="badge bg-warning text-dark font-heading">ENTRY FEE (-💎)</span>
+                                {% elif tx.transaction_type == 'SUBSCRIPTION' %}
+                                    <span class="badge bg-info text-dark font-heading">MANAGER SUB (-💎)</span>
+                                {% else %}
+                                    <span class="badge bg-primary text-white font-heading">WINNINGS (+💎)</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-light fw-bold">{{ tx.description }}</td>
+                            <td>
+                                {% if tx.amount_diamonds > 0 %}
+                                    <strong class="text-success">+💎 {{ tx.amount_diamonds }}</strong>
+                                {% else %}
+                                    <strong class="text-danger">💎 {{ tx.amount_diamonds }}</strong>
+                                {% endif %}
+                            </td>
+                            <td class="text-muted">€{{ tx.amount_euros }}</td>
+                            <td class="text-muted">{{ tx.timestamp|date:"M d, Y - H:i" }}</td>
+                            <td>
+                                <span class="badge bg-success opacity-75">{{ tx.status }}</span>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="6" class="text-center text-muted py-4">
+                                <i class="fa-solid fa-receipt fa-2x mb-2 d-block opacity-50"></i>
+                                No wallet transactions recorded yet.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_modals %}
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- MODAL: TOP UP DIAMONDS                                  -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="modal fade" id="topUpModal" tabindex="-1" aria-labelledby="topUpModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark border border-neon-cyan text-white">
+            <div class="modal-header border-secondary">
+                <h4 class="modal-title font-heading text-neon-cyan" id="topUpModalLabel">
+                    <i class="fa-solid fa-gem me-2"></i>TOP UP DIAMONDS (1€ = 1💎)
+                </h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{% url 'wallet_topup' %}">
+                {% csrf_token %}
+                <div class="modal-body p-4">
+                    
+                    <div class="alert alert-dark border-neon-cyan text-light small mb-4">
+                        <i class="fa-solid fa-circle-info text-neon-cyan me-2"></i>
+                        Diamonds are credited instantly at a 1:1 rate (1 Euro = 1 Diamond).
+                    </div>
+
+                    <!-- Amount Selection -->
+                    <div class="mb-4">
+                        <label for="topup-amount" class="form-label text-neon-cyan font-heading fw-bold">Select Amount (€ / 💎)</label>
+                        <div class="row g-2 mb-2">
+                            <div class="col-3">
+                                <button type="button" class="btn btn-outline-neon-cyan w-100 btn-preset-amount" data-amount="10">💎 10 (€10)</button>
+                            </div>
+                            <div class="col-3">
+                                <button type="button" class="btn btn-outline-neon-cyan w-100 btn-preset-amount" data-amount="25">💎 25 (€25)</button>
+                            </div>
+                            <div class="col-3">
+                                <button type="button" class="btn btn-outline-neon-cyan w-100 btn-preset-amount" data-amount="50">💎 50 (€50)</button>
+                            </div>
+                            <div class="col-3">
+                                <button type="button" class="btn btn-outline-neon-cyan w-100 btn-preset-amount" data-amount="100">💎 100 (€100)</button>
+                            </div>
+                        </div>
+                        <input type="number" step="1" min="1" class="form-control bg-dark-blue text-light border-neon-cyan" id="topup-amount" name="amount" placeholder="Custom Amount in Euros / Diamonds" value="10" required>
+                    </div>
+
+                    <!-- Card Details -->
+                    <h5 class="text-neon-orange font-heading mb-3 border-bottom border-secondary pb-2">PAYMENT CARD</h5>
+                    
+                    <div class="row g-3 mb-3">
+                        <div class="col-12">
+                            <label for="tu_cardholder_name" class="form-label text-white small">Cardholder Name</label>
+                            <input type="text" class="form-control bg-dark text-white border-secondary" id="tu_cardholder_name" name="cardholder_name" value="{{ user.full_name }}" required>
+                        </div>
+                        <div class="col-12">
+                            <label for="tu_card_number" class="form-label text-white small">Card Number</label>
+                            <input type="text" class="form-control bg-dark text-white border-secondary" id="tu_card_number" name="card_number" placeholder="1234 5678 9012 3456" maxlength="19" required>
+                        </div>
+                        <div class="col-6">
+                            <label for="tu_expiry_date" class="form-label text-white small">Expiry Date</label>
+                            <input type="text" class="form-control bg-dark text-white border-secondary" id="tu_expiry_date" name="expiry_date" placeholder="MM/YY" maxlength="5" required>
+                        </div>
+                        <div class="col-6">
+                            <label for="tu_cvv" class="form-label text-white small">CVV</label>
+                            <input type="text" class="form-control bg-dark text-white border-secondary" id="tu_cvv" name="cvv" placeholder="•••" maxlength="4" required>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-secondary justify-content-center">
+                    <button type="submit" class="btn btn-cyber-cyan btn-lg font-heading px-5">
+                        <i class="fa-solid fa-bolt me-2"></i>CONFIRM TOP UP
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<!-- MODAL: CASH OUT / WITHDRAW                              -->
+<!-- ═══════════════════════════════════════════════════════ -->
+<div class="modal fade" id="cashOutModal" tabindex="-1" aria-labelledby="cashOutModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark border border-neon-orange text-white">
+            <div class="modal-header border-secondary">
+                <h4 class="modal-title font-heading text-neon-orange" id="cashOutModalLabel">
+                    <i class="fa-solid fa-money-bill-transfer me-2"></i>CASH OUT DIAMONDS TO REAL MONEY
+                </h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="POST" action="{% url 'wallet_cashout' %}">
+                {% csrf_token %}
+                <div class="modal-body p-4">
+                    
+                    <div class="alert alert-dark border-neon-orange text-light small mb-4">
+                        <i class="fa-solid fa-shield-halved text-neon-orange me-2"></i>
+                        Convert your 💎 Diamonds into real Euros (€1.00 per Diamond) transferred to your bank or card account.
+                    </div>
+
+                    <div class="mb-4">
+                        <label for="cashout-amount" class="form-label text-neon-orange font-heading fw-bold">Diamonds to Withdraw (💎)</label>
+                        <input type="number" step="0.01" min="1" max="{{ user.diamonds }}" class="form-control bg-dark-blue text-light border-neon-orange" id="cashout-amount" name="amount" placeholder="Enter amount to convert to Euros" value="{{ user.diamonds }}" required>
+                        <div class="form-text text-muted">Max Available: <strong>💎 {{ user.diamonds|default:"0.00" }}</strong> (€{{ user.diamonds|default:"0.00" }})</div>
+                    </div>
+
+                    <h5 class="text-neon-cyan font-heading mb-3 border-bottom border-secondary pb-2">RECEIVING BANK / PAYOUT ACCOUNT</h5>
+                    
+                    <div class="row g-3 mb-3">
+                        <div class="col-12">
+                            <label for="account_name" class="form-label text-white small">Account Holder Full Name</label>
+                            <input type="text" class="form-control bg-dark text-white border-secondary" id="account_name" name="account_name" value="{{ user.full_name }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="bank_name" class="form-label text-white small">Bank / Provider Name</label>
+                            <input type="text" class="form-control bg-dark text-white border-secondary" id="bank_name" name="bank_name" placeholder="e.g. Revolut / PayPal / Chase" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="iban" class="form-label text-white small">IBAN / Account Number / Email</label>
+                            <input type="text" class="form-control bg-dark text-white border-secondary" id="iban" name="iban" placeholder="DE89 3704 0044 0532 0130 00" required>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="modal-footer border-secondary justify-content-center">
+                    <button type="submit" class="btn btn-cyber-orange btn-lg font-heading px-5">
+                        <i class="fa-solid fa-money-bill-wave me-2"></i>CONFIRM CASH OUT
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Preset buttons for topup
+    const presetBtns = document.querySelectorAll('.btn-preset-amount');
+    const topupInput = document.getElementById('topup-amount');
+    presetBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            if (topupInput) {
+                topupInput.value = this.dataset.amount;
+                topupInput.focus();
+            }
+        });
+    });
+
+    // Auto-focus inputs when modals are shown
+    const topUpModalEl = document.getElementById('topUpModal');
+    if (topUpModalEl) {
+        topUpModalEl.addEventListener('shown.bs.modal', function () {
+            const firstInput = document.getElementById('topup-amount');
+            if (firstInput) firstInput.focus();
+        });
+    }
+
+    const cashOutModalEl = document.getElementById('cashOutModal');
+    if (cashOutModalEl) {
+        cashOutModalEl.addEventListener('shown.bs.modal', function () {
+            const firstInput = document.getElementById('cashout-amount');
+            if (firstInput) firstInput.focus();
+        });
+    }
+
+    // Card number formatting: auto space every 4 digits
+    const cardNumberInput = document.getElementById('tu_card_number');
+    if (cardNumberInput) {
+        cardNumberInput.addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '').substring(0, 16);
+            let formatted = val.match(/.{1,4}/g)?.join(' ') || val;
+            e.target.value = formatted;
+        });
+    }
+
+    // Expiry date formatting: MM/YY
+    const expiryInput = document.getElementById('tu_expiry_date');
+    if (expiryInput) {
+        expiryInput.addEventListener('input', function(e) {
+            let val = e.target.value.replace(/\D/g, '').substring(0, 4);
+            if (val.length >= 3) {
+                e.target.value = val.substring(0, 2) + '/' + val.substring(2, 4);
+            } else {
+                e.target.value = val;
+            }
+        });
+    }
+});
+</script>
+{% endblock %}

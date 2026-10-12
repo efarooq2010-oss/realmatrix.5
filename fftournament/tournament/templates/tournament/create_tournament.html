@@ -1,0 +1,105 @@
+{% extends 'tournament/base.html' %}
+{% load static %}
+
+{% block title %}Create Tournament - Free Fire Arena{% endblock %}
+
+{% block content %}
+<div class="row mb-5">
+    <div class="col-12 text-center">
+        <h1 class="text-neon-cyan font-heading display-4 fw-bold">CREATE TOURNAMENT</h1>
+        <p class="lead text-muted">Set up a new arena event and let the warriors clash.</p>
+    </div>
+</div>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8 col-md-10">
+        <div class="card glass-card border-neon-cyan p-4">
+            <div class="card-body">
+                <!-- Manager Tier Info -->
+                <div class="text-center mb-4">
+                    <span class="badge bg-warning text-dark px-3 py-2 fs-6 font-heading">
+                        <i class="fa-solid fa-crown me-2"></i>{{ user.membership_tier }} MANAGER
+                    </span>
+                    <p class="small text-muted mt-2">
+                        {% if user.membership_tier == 'Silver' %}
+                            Daily Limit: 1 tournament | Max Entry Fee: €2.00
+                        {% elif user.membership_tier == 'Gold' %}
+                            Daily Limit: 3 tournaments | Max Entry Fee: €5.00
+                        {% elif user.membership_tier == 'Diamond' %}
+                            Daily Limit: 10 tournaments | Max Entry Fee: €10.00
+                        {% endif %}
+                    </p>
+                </div>
+
+                <form method="POST" id="create-tournament-form">
+                    {% csrf_token %}
+
+                    <!-- Date & Time -->
+                    <div class="mb-4">
+                        <label for="ct-datetime" class="form-label text-neon-cyan font-heading">
+                            <i class="fa-regular fa-calendar-days me-2"></i>DATE & TIME
+                        </label>
+                        <input type="datetime-local" class="form-control bg-dark-blue text-light border-neon-cyan" id="ct-datetime" name="date_time" required>
+                    </div>
+
+                    <!-- Mode -->
+                    <div class="mb-4">
+                        <label for="ct-mode" class="form-label text-neon-cyan font-heading">
+                            <i class="fa-solid fa-gamepad me-2"></i>GAME MODE
+                        </label>
+                        <select class="form-select bg-dark-blue text-light border-neon-cyan" id="ct-mode" name="mode" required>
+                            <option value="" selected disabled>Select mode...</option>
+                            <option value="Solo">Solo</option>
+                            <option value="Duo">Duo</option>
+                            <option value="Squad">Squad</option>
+                            <option value="Clash Squad">Clash Squad</option>
+                        </select>
+                    </div>
+
+                    <!-- Entry Fee -->
+                    <div class="mb-4">
+                        <label for="ct-fee" class="form-label text-neon-cyan font-heading">
+                            <i class="fa-solid fa-ticket me-2"></i>ENTRY FEE (€)
+                        </label>
+                        <input type="number" step="0.01" min="0" class="form-control bg-dark-blue text-light border-neon-cyan" id="ct-fee" name="entry_fee" placeholder="0.00" required>
+                        <div class="form-text text-muted">
+                            Max allowed: €{% if user.membership_tier == 'Silver' %}2.00{% elif user.membership_tier == 'Gold' %}5.00{% elif user.membership_tier == 'Diamond' %}10.00{% endif %}
+                        </div>
+                    </div>
+
+                    <!-- Prize Pool Preview -->
+                    <div class="mb-4 p-3 rounded" style="background: rgba(0, 255, 255, 0.05); border: 1px dashed rgba(0, 255, 255, 0.3);">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="text-neon-cyan font-heading"><i class="fa-solid fa-trophy me-2"></i>ESTIMATED PRIZE POOL</span>
+                            <span class="text-neon-orange fs-4 fw-bold font-heading" id="prize-preview">€0.00</span>
+                        </div>
+                        <p class="small text-muted mb-0 mt-1">Calculated as Entry Fee × 40 players</p>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-cyber-orange btn-lg font-heading">
+                            <i class="fa-solid fa-rocket me-2"></i>LAUNCH TOURNAMENT
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Live prize pool calculation
+    const feeInput = document.getElementById('ct-fee');
+    const prizePreview = document.getElementById('prize-preview');
+    if (feeInput && prizePreview) {
+        feeInput.addEventListener('input', function() {
+            const fee = parseFloat(this.value) || 0;
+            const prize = fee * 40;
+            prizePreview.textContent = '€' + prize.toFixed(2);
+        });
+    }
+</script>
+{% endblock %}

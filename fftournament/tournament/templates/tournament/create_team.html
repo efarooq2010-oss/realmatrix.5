@@ -1,0 +1,331 @@
+{% extends 'tournament/base.html' %}
+{% load static %}
+
+{% block title %}Create Team - Free Fire Arena{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="glass-card p-4 border-neon-cyan my-4">
+            <h2 class="text-neon-cyan font-heading text-center mb-4"><i class="fa-solid fa-users-gear me-2"></i>REGISTER COMBAT SQUAD</h2>
+            <p class="text-center small text-muted mb-4">Complete the fields below to book a slot for your squad in the upcoming battlefields.</p>
+
+            <form method="POST" action="{% url 'create_team' %}" id="team-creation-form">
+                {% csrf_token %}
+
+                <!-- Tournament Selection & Team/Player Name -->
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-3 mb-md-0">
+                        <label for="id_tournament" class="form-label text-white small">Target Tournament <span class="text-neon-orange">*</span></label>
+                        <select name="tournament" id="id_tournament" class="form-select bg-dark-blue text-light border-neon-cyan" required>
+                            <option value="" disabled selected data-mode="Squad" data-fee="0.00">-- Select Tournament --</option>
+                            {% for t in tournaments %}
+                                <option value="{{ t.id }}" data-mode="{{ t.mode }}" data-fee="{{ t.entry_fee }}" {% if request.GET.tournament|add:"0" == t.id %}selected{% endif %}>
+                                    {{ t.name }} ({{ t.mode }}) - Fee: 💎 {{ t.entry_fee }} - Slots Left: {{ t.slots_available }}
+                                </option>
+                            {% empty %}
+                                <option value="" disabled data-mode="Squad" data-fee="0.00">No active upcoming tournaments available</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    
+                    <div class="col-md-6" id="team-name-col">
+                        <label for="id_team_name" class="form-label text-white small" id="label-team-name">Squad/Team Name <span class="text-neon-orange">*</span></label>
+                        <input type="text" name="team_name" id="id_team_name" class="form-control bg-dark-blue text-light border-neon-cyan" placeholder="Enter Squad Name" value="{{ user.full_name }} Squad" required>
+                    </div>
+                </div>
+
+                <!-- Dynamic Players Section -->
+                <h5 class="text-neon-orange font-heading mb-3 border-bottom border-secondary pb-2" id="roster-title">
+                    <i class="fa-solid fa-list-check me-2"></i>COMPETITOR ROSTER
+                </h5>
+                
+                <div class="row g-3 mb-4" id="roster-container">
+                    <!-- Player 1 (Solo / Captain) -->
+                    <div class="col-md-6" id="player-row-1">
+                        <div class="p-3 bg-dark bg-opacity-50 border border-secondary rounded">
+                            <label class="form-label text-neon-cyan small fw-bold" id="label-player-1">Player 1 (Captain) <span class="text-neon-orange">*</span></label>
+                            <input type="text" name="player_1_name" id="p1_name" class="form-control mb-2" placeholder="Full Name" value="{{ user.full_name }}" required>
+                            <input type="text" name="player_1_id" id="p1_id" class="form-control" placeholder="Free Fire ID" value="{{ user.game_id }}" required>
+                        </div>
+                    </div>
+
+                    <!-- Player 2 (Duo / Squad) -->
+                    <div class="col-md-6" id="player-row-2">
+                        <div class="p-3 bg-dark bg-opacity-50 border border-secondary rounded">
+                            <label class="form-label text-neon-cyan small fw-bold">Player 2 <span class="text-neon-orange">*</span></label>
+                            <input type="text" name="player_2_name" id="p2_name" class="form-control mb-2" placeholder="Full Name">
+                            <input type="text" name="player_2_id" id="p2_id" class="form-control" placeholder="Free Fire ID">
+                        </div>
+                    </div>
+
+                    <!-- Player 3 (Squad) -->
+                    <div class="col-md-6" id="player-row-3">
+                        <div class="p-3 bg-dark bg-opacity-50 border border-secondary rounded">
+                            <label class="form-label text-neon-cyan small fw-bold">Player 3 <span class="text-neon-orange">*</span></label>
+                            <input type="text" name="player_3_name" id="p3_name" class="form-control mb-2" placeholder="Full Name">
+                            <input type="text" name="player_3_id" id="p3_id" class="form-control" placeholder="Free Fire ID">
+                        </div>
+                    </div>
+
+                    <!-- Player 4 (Squad) -->
+                    <div class="col-md-6" id="player-row-4">
+                        <div class="p-3 bg-dark bg-opacity-50 border border-secondary rounded">
+                            <label class="form-label text-neon-cyan small fw-bold">Player 4 <span class="text-neon-orange">*</span></label>
+                            <input type="text" name="player_4_name" id="p4_name" class="form-control mb-2" placeholder="Full Name">
+                            <input type="text" name="player_4_id" id="p4_id" class="form-control" placeholder="Free Fire ID">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Substitute Player (Squad Only) -->
+                <div id="substitute-section">
+                    <h5 class="text-neon-orange font-heading mb-3 border-bottom border-secondary pb-2"><i class="fa-solid fa-rotate me-2"></i>SUBSTITUTE PLAYER (Optional)</h5>
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="p-3 bg-dark bg-opacity-50 border border-secondary rounded">
+                                <div class="row g-2">
+                                    <div class="col-md-6">
+                                        <input type="text" name="sub_name" class="form-control" placeholder="Substitute Full Name">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="text" name="sub_id" class="form-control" placeholder="Substitute Free Fire ID">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Entry Fee Diamond Payment Section -->
+                <h5 class="text-neon-orange font-heading mb-3 border-bottom border-secondary pb-2">
+                    <i class="fa-solid fa-gem text-info me-2"></i>PAYMENT VIA DIAMOND WALLET
+                </h5>
+                
+                <div class="p-3 mb-4 rounded bg-dark border border-neon-cyan">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-white small font-heading">YOUR DIAMOND BALANCE:</span>
+                        <strong class="text-neon-cyan font-heading fs-5">💎 {{ user.diamonds|default:"0.00" }}</strong>
+                    </div>
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="text-white small font-heading">TOURNAMENT ENTRY FEE:</span>
+                        <strong class="text-neon-orange font-heading fs-5" id="display-fee-amount">💎 0.00</strong>
+                    </div>
+                    <div class="form-text text-muted small border-top border-secondary pt-2">
+                        <i class="fa-solid fa-circle-info text-neon-cyan me-1"></i>
+                        The entry fee will be deducted directly from your Diamond balance. Need more? <a href="{% url 'wallet' %}" class="text-neon-cyan fw-bold">Top up diamonds in your Wallet</a>.
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-cyber-orange btn-lg font-heading" id="btn-submit-team">
+                        <i class="fa-solid fa-gem me-2"></i>PAY ENTRY FEE & JOIN ARENA
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% if joined_success %}
+<!-- CUSTOM ROOM CREDENTIALS MODAL -->
+<div class="modal fade show" id="roomCredentialsModal" tabindex="-1" aria-labelledby="roomCredentialsModalLabel" style="display: block; background: rgba(0,0,0,0.85);" aria-modal="true" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content bg-dark text-white" style="border: 2px solid var(--neon-cyan); box-shadow: 0 0 40px rgba(0,255,255,0.3);">
+            <div class="modal-header border-secondary" style="background: linear-gradient(135deg, rgba(0,255,255,0.15), rgba(255,94,0,0.15));">
+                <h4 class="modal-title font-heading text-neon-cyan" id="roomCredentialsModalLabel">
+                    <i class="fa-solid fa-circle-check text-success me-2"></i>PAYMENT CONFIRMED & SLOT BOOKED
+                </h4>
+                <a href="{% url 'my_tournaments' %}" class="btn-close btn-close-white"></a>
+            </div>
+            <div class="modal-body text-center p-4">
+                <i class="fa-solid fa-gamepad text-neon-orange fa-4x mb-3 animate__animated animate__bounceIn"></i>
+                <h3 class="font-heading text-white mb-2">{{ room_credentials.tournament_name }}</h3>
+                <p class="text-muted">Squad Registered: <strong class="text-neon-cyan">{{ room_credentials.team_name }}</strong></p>
+                
+                <div class="p-3 my-4 rounded border border-neon-cyan" style="background: rgba(0,255,255,0.05);">
+                    <p class="text-uppercase text-muted font-heading small mb-3"><i class="fa-solid fa-key me-1 text-warning"></i>YOUR EXCLUSIVE CUSTOM LOBBY ACCESS</p>
+                    
+                    <div id="credentials-box">
+                        {% if room_credentials.is_unlocked %}
+                        <div class="row g-3 justify-content-center">
+                            <div class="col-md-5">
+                                <div class="p-3 rounded bg-dark border border-secondary">
+                                    <span class="text-muted small font-heading d-block mb-1">1. CUSTOM ROOM ID</span>
+                                    <h3 class="text-neon-cyan font-heading mb-0 letter-spacing-wide" id="modal-room-id">{{ room_credentials.custom_room_id }}</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="p-3 rounded bg-dark border border-secondary">
+                                    <span class="text-muted small font-heading d-block mb-1">2. CUSTOM ROOM PASSWORD</span>
+                                    <h3 class="text-neon-orange font-heading mb-0 letter-spacing-wide" id="modal-room-pass">{{ room_credentials.custom_room_password }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <div class="p-3 rounded bg-dark border border-neon-orange mb-3" id="locked-banner">
+                            <div class="d-flex align-items-center justify-content-center mb-2">
+                                <i class="fa-solid fa-lock text-neon-orange fs-3 me-2"></i>
+                                <h4 class="font-heading text-neon-orange mb-0">CREDENTIALS LOCKED</h4>
+                            </div>
+                            <p class="text-light small mb-2">
+                                Room ID & Password will automatically unlock <strong class="text-neon-cyan">5 minutes before the match starts</strong>.
+                            </p>
+                            <div class="badge bg-dark border border-neon-cyan p-2 fs-6 font-heading text-neon-cyan" id="unlock-timer-display" data-unlock="{{ room_credentials.unlock_time_iso }}">
+                                Unlocks in: Calculating...
+                            </div>
+                        </div>
+                        <div class="row g-3 justify-content-center opacity-50" id="masked-credentials-row">
+                            <div class="col-md-5">
+                                <div class="p-3 rounded bg-dark border border-secondary">
+                                    <span class="text-muted small font-heading d-block mb-1">1. CUSTOM ROOM ID</span>
+                                    <h3 class="text-muted font-heading mb-0 letter-spacing-wide" id="modal-room-id-masked">ROOM-••••••</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-5">
+                                <div class="p-3 rounded bg-dark border border-secondary">
+                                    <span class="text-muted small font-heading d-block mb-1">2. CUSTOM ROOM PASSWORD</span>
+                                    <h3 class="text-muted font-heading mb-0 letter-spacing-wide" id="modal-room-pass-masked">••••••••</h3>
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+
+                <div class="alert alert-dark border-secondary text-light small text-start">
+                    <i class="fa-solid fa-circle-info text-neon-cyan me-2"></i>
+                    <strong>Match Notice:</strong> Scheduled start time: <strong>{{ room_credentials.tournament_date_formatted }}</strong>. Room credentials unlock 5 minutes prior to start.
+                </div>
+            </div>
+            <div class="modal-footer border-secondary justify-content-center">
+                <a href="{% url 'my_tournaments' %}" class="btn btn-cyber-orange btn-lg font-heading px-5">
+                    <i class="fa-solid fa-trophy me-2"></i>VIEW MY TOURNAMENTS
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tournamentSelect = document.getElementById('id_tournament');
+    const rosterTitle = document.getElementById('roster-title');
+    const teamNameCol = document.getElementById('team-name-col');
+    const labelTeamName = document.getElementById('label-team-name');
+    const teamNameInput = document.getElementById('id_team_name');
+    
+    const p1Row = document.getElementById('player-row-1');
+    const p2Row = document.getElementById('player-row-2');
+    const p3Row = document.getElementById('player-row-3');
+    const p4Row = document.getElementById('player-row-4');
+    const subSection = document.getElementById('substitute-section');
+    const displayFee = document.getElementById('display-fee-amount');
+
+    const p2Name = document.getElementById('p2_name');
+    const p2Id = document.getElementById('p2_id');
+    const p3Name = document.getElementById('p3_name');
+    const p3Id = document.getElementById('p3_id');
+    const p4Name = document.getElementById('p4_name');
+    const p4Id = document.getElementById('p4_id');
+
+    function updateRosterMode() {
+        if (!tournamentSelect) return;
+        const selectedOpt = tournamentSelect.options[tournamentSelect.selectedIndex];
+        if (!selectedOpt) return;
+
+        const mode = selectedOpt.getAttribute('data-mode') || 'Squad';
+        const fee = selectedOpt.getAttribute('data-fee') || '0.00';
+        
+        displayFee.textContent = '💎 ' + fee;
+
+        if (mode === 'Solo' || mode === '1v1') {
+            rosterTitle.innerHTML = '<i class="fa-solid fa-user me-2"></i>SOLO COMPETITOR DETAILS';
+            labelTeamName.innerHTML = 'Competitor Display Name <span class="text-neon-orange">*</span>';
+            teamNameInput.placeholder = 'Enter Competitor Name';
+            
+            p1Row.style.display = 'block';
+            p2Row.style.display = 'none';
+            p3Row.style.display = 'none';
+            p4Row.style.display = 'none';
+            subSection.style.display = 'none';
+
+            p2Name.required = false; p2Id.required = false;
+            p3Name.required = false; p3Id.required = false;
+            p4Name.required = false; p4Id.required = false;
+        } 
+        else if (mode === 'Duo' || mode === '2v2') {
+            rosterTitle.innerHTML = '<i class="fa-solid fa-user-group me-2"></i>DUO ROSTER (2 Players Required)';
+            labelTeamName.innerHTML = 'Duo Team Name <span class="text-neon-orange">*</span>';
+            teamNameInput.placeholder = 'Enter Duo Name';
+            
+            p1Row.style.display = 'block';
+            p2Row.style.display = 'block';
+            p3Row.style.display = 'none';
+            p4Row.style.display = 'none';
+            subSection.style.display = 'none';
+
+            p2Name.required = true; p2Id.required = true;
+            p3Name.required = false; p3Id.required = false;
+            p4Name.required = false; p4Id.required = false;
+        } 
+        else { // Squad / 4v4
+            rosterTitle.innerHTML = '<i class="fa-solid fa-users me-2"></i>SQUAD ROSTER (4 Players Required)';
+            labelTeamName.innerHTML = 'Squad / Team Name <span class="text-neon-orange">*</span>';
+            teamNameInput.placeholder = 'Enter Squad Name';
+            
+            p1Row.style.display = 'block';
+            p2Row.style.display = 'block';
+            p3Row.style.display = 'block';
+            p4Row.style.display = 'block';
+            subSection.style.display = 'block';
+
+            p2Name.required = true; p2Id.required = true;
+            p3Name.required = true; p3Id.required = true;
+            p4Name.required = true; p4Id.required = true;
+        }
+    }
+
+    if (tournamentSelect) {
+        tournamentSelect.addEventListener('change', updateRosterMode);
+        updateRosterMode();
+    }
+
+    // ─── Live Unlock Countdown Timer ──
+    const unlockTimerDisplay = document.getElementById('unlock-timer-display');
+    if (unlockTimerDisplay) {
+        const unlockTimeIso = unlockTimerDisplay.getAttribute('data-unlock');
+        const unlockTarget = new Date(unlockTimeIso).getTime();
+
+        function updateCountdown() {
+            const now = new Date().getTime();
+            const distance = unlockTarget - now;
+
+            if (distance <= 0) {
+                location.reload();
+            } else {
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                const hours = Math.floor(distance / (1000 * 60 * 60));
+                
+                let timeStr = "";
+                if (hours > 0) timeStr += hours + "h ";
+                timeStr += minutes + "m " + seconds + "s";
+                
+                unlockTimerDisplay.textContent = "🔒 Unlocks in: " + timeStr;
+            }
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    }
+});
+</script>
+{% endblock %}
+
+
