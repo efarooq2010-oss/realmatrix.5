@@ -170,7 +170,7 @@ def admin_dashboard(request):
         'Diamond': UserProfile.objects.filter(membership_tier='Diamond').count(),
     }
     total_managers = manager_counts['Silver'] + manager_counts['Gold'] + manager_counts['Diamond']
-    
+    #abc
     total_tournaments = Tournament.objects.count()
     tournament_status = {
         'Upcoming': Tournament.objects.filter(status='Upcoming').count(),
